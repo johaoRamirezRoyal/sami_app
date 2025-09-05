@@ -1,4 +1,4 @@
-import { View } from "react-native-web";
+import { View } from "react-native";
 import { styles } from "../styles/prueba/pruebaStyles";
 import { Text } from "react-native-paper";
 

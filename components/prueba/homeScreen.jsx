@@ -11,18 +11,18 @@ export default function HomeScreen({ navigation }) {
       <Text>Home Screen</Text>
       <StatusBar style="auto" />
       <Button 
-        icon="settings-outline"
+        
         mode="contained"
         onPress={() => navigation.navigate('Settings')} 
         > 
         Go to Settings
       </Button>
       <Button 
-        icon="settings-outline"
+        
         mode="contained"
-        onPress={() => navigation.navigate('Prueba')}
+        onPress={() => navigation.navigate('Johao')}
       >
-        Go to Prueba
+        Go to Help Screen
       </Button>
     </View>
   );

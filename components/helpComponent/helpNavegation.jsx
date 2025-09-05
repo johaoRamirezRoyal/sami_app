@@ -1,4 +1,5 @@
-import { Image, View, Text, Platform } from "react-native";
+import { Image, View, Text, Platform, ScrollView } from "react-native";
+import YoutubePlayer from 'react-native-youtube-iframe';
 import { Appbar } from "react-native-paper";
 import { TabBar, TabView } from "react-native-tab-view";
 import {styles} from "../../styles/help/helpStyle";
@@ -9,70 +10,95 @@ export default function HelpNav({ navigation }) {
   // Definir los tabs y el estado
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    { key: "first", title: "Tab 1" },
-    { key: "second", title: "Tab 2" },
+    { key: "first", title: "Sobre S.A.M.I app" },
+    { key: "second", title: "Como reservar salones y subir firma digital" },
+    { key: "third", title: "Como reportar un artículo" },
   ]);
 
   // Renderizar el contenido de cada tab
   const renderScene = ({ route }) => {
     switch (route.key) {
       case "first":
-        return <View style={styles.tabContent}><Text>Contenido del Tab 1</Text></View>;
+        return <AboutRoute />;
       case "second":
-        return <View style={styles.tabContent}><Text>Contenido del Tab 2</Text></View>;
+        return <ReservaRoute />;
+      case "third":
+  return <ReporteRoute />;
       default:
         return null;
     }
   };
 
+
+
+
+// --- Contenido y componente para el tab1"Sobre S.A.M.I app" ---
+const aboutText1 =
+  'es un software en la nube que apoya la gestión administrativa y académica para instituciones educativas, permitiendo generar un impacto positivo en el crecimiento y desarrollo de sus procesos internos.';
+const aboutText2 =
+  'Contamos con los siguientes módulos para instituciones educativas:';
+const aboutModules = [
+  'Reservas',
+  'lis. Inventario',
+  'impuntualidad',
+];
+const aboutText3 =
+  'permite trabajar de manera fácil, ya que su diseño se encuentra estructurado a través de módulos que permite ubicar de manera rápida las funciones asignadas para cada usuario.';
+
+function AboutRoute() {
+  return (
+    <ScrollView contentContainerStyle={styles.tabContent}>
+      <Text style={styles.h5}><Text style={styles.bold}>S.A.M.I app</Text> {aboutText1}</Text>
+      <Text style={styles.h5}>{aboutText2}</Text>
+      <Text style={styles.h5}>
+        {aboutModules.map((mod, idx) => `\u2022 ${mod}${idx < aboutModules.length - 1 ? '\n' : ''}`).join('')}
+      </Text>
+      <Text style={styles.h5}>El diseño de <Text style={styles.bold}>S.A.M.I app</Text> {aboutText3}</Text>
+    </ScrollView>
+  );
+}
+
+
+// --- Contenido y componente para el tab2"Como reservar salones y subir firma digital" ---
+const reservaVideoId = 'IOMMDNfJc90';
+
+function ReservaRoute() {
+  return (
+    <ScrollView contentContainerStyle={styles.tabContent}>
+      <Text style={styles.h5}>Video tutorial:</Text>
+      <View style={styles.videoContainer}>
+        <YoutubePlayer
+          height={220}
+          play={false}
+          videoId={reservaVideoId}
+        />
+      </View>
+    </ScrollView>
+  );
+}
+
+// --- Contenido y componente para el tab3"Como reportar un artículo" ---
+const reporteVideoId = 'avNv20RghEk';
+
+function ReporteRoute() {
+  return (
+    <ScrollView contentContainerStyle={styles.tabContent}>
+      <Text style={styles.h5}>Video tutorial:</Text>
+      <View style={styles.videoContainer}>
+        <YoutubePlayer
+          height={220}
+          play={false}
+          videoId={reporteVideoId}
+        />
+      </View>
+    </ScrollView>
+  );
+}
+
+
+
   return (
     <View style={styles.root}>
-      {/* Barra de navegación superior flotante */}
-      <Appbar.Header style={styles.appbar}>
-        {/* Botón de Exit */}
-        <Appbar.Action
-          icon="account-arrow-left"
-          onPress={() => {
-            if (navigation && navigation.reset) {
-              navigation.reset({
-                index: 0,
-                routes: [{ name: "Login" }],
-              });
-            } else if (navigation && navigation.navigate) {
-              navigation.navigate("Login");
-            }
-          }}
-          size={36}
-        />
-        {/* Logo completamente centrado */}
-        <View
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            top: 0,
-            bottom: 0,
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: -1,
-          }}
-        >
-          {Platform.OS === 'web' ? (
-            <img
-              src={require('../../assets/logoroyal.png')}
-              alt="Logo"
-              style={{ width: 50, height: 50, objectFit: 'contain' }}
-            />
-          ) : (
-            <Image
-              source={require("../../assets/logoroyal.png")}
-              style={styles.logoBar}
-              resizeMode="contain"
-            />
-          )}
-        </View>
-      </Appbar.Header>
-
       {/* Contenido central con tabs */}
       <View style={styles.centerContent}>
         <TabView

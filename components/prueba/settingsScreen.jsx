@@ -9,7 +9,8 @@ export default function SettingsScreen({ navigation }) {
       <Button 
         icon="home-outline"
         mode="contained"
-        onPress={() => navigation.navigate('Login')}
+        onPress={() => navigation.navigate('Login')
+        }
       >
         Go to Home
       </Button>

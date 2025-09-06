@@ -2,7 +2,7 @@ import { Image, View, Text, Platform, ScrollView } from "react-native";
 import YoutubePlayer from 'react-native-youtube-iframe';
 import { Appbar } from "react-native-paper";
 import { TabBar, TabView } from "react-native-tab-view";
-import {styles} from "../../styles/help/helpStyle";
+import {styles} from "../styles/help/helpStyle"
 
 import React, { useState } from "react";
 
@@ -122,3 +122,4 @@ function ReporteRoute() {
     </View>
   );
 }
+

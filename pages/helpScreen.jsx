@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import HelpNav from "../components/helpComponent/helpNavegation";
+import HelpNav from "./helpNavegation";
 
 export default function HelpScreen() {
   return (

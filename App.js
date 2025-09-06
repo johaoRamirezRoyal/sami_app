@@ -10,7 +10,7 @@ import HomeScreen from './components/prueba/homeScreen';
 import SettingsScreen from './components/prueba/settingsScreen';
 import Prueba from './pages/prueba';
 import HelpScreen from './pages/helpScreen';
-import HelpNav from './components/helpComponent/helpNavegation';
+import HelpNav from './pages/helpNavegation';
 
 
 const Stack = createNativeStackNavigator();

@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
+    "lint": "eslint .",
+    "start": "expo start",
+    "test": "echo \"No test specified\" && exit 0",
     "web": "expo start --web"
   },
   "dependencies": {

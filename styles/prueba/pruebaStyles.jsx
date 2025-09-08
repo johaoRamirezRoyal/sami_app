@@ -16,16 +16,33 @@ export const styles = StyleSheet.create({
     marginBottom: 30,
   },
   button: {
-    width: 220,
+    width: 190,             // ancho del botón
     marginVertical: 10,
-    borderRadius: 8,
-    elevation: 2,
-    backgroundColor: '#0984e3',
+    borderRadius: 35,
+    elevation: 5,
+    backgroundColor: '#004989',
+    paddingVertical: 7,     // alto del botón
+    paddingHorizontal: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonDisabled: {
+    backgroundColor: '#b0b0b0', // color para botón deshabilitado
   },
   buttonLabel: {
-    fontSize: 16,
+    fontSize: 19,           // tamaño del texto del botón
     color: '#fff',
     fontWeight: '600',
     letterSpacing: 1,
+  },
+  textInput: {
+    borderRadius: 30,
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+    marginBottom: 5,
+    fontSize: 15,           // tamaño del texto del input
+    color: '#c4c4c4ff',
+    height: 39,             // altura del input
+    paddingHorizontal: 8,   // espacio lateral
   },
 });

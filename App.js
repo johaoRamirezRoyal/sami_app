@@ -51,13 +51,14 @@ export default function App() {
         <Stack.Screen 
           name="Settings" 
           component={SettingsScreen} 
-          options={getLogoHeaderOptions()}
-          />
+          options={{ headerShown: false }}
+        />
         {/* --------------------------------------------------- */}
         <Stack.Screen 
           name="JOSE" 
           component={HelpNav} 
           options={getLogoHeaderOptions()} 
+          
         />
         
       </Stack.Navigator>

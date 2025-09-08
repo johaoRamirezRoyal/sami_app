@@ -1,57 +1,158 @@
-
+import React, { useState } from "react";
+import { 
+  View, 
+  Text, 
+  ImageBackground, 
+  Image, 
+  Animated, 
+  TouchableOpacity, 
+  KeyboardAvoidingView, 
+  Platform, 
+  ActivityIndicator 
+} from 'react-native';
 import { Button, Card, TextInput } from "react-native-paper";
-import { Text, View, ImageBackground, Image, Animated, TouchableOpacity } from 'react-native';
-import { styles } from "../../styles/prueba/pruebaStyles";
 import { StatusBar } from 'expo-status-bar';
+
+import { styles } from "../../styles/prueba/pruebaStyles";
 import fondo from '../../assets/fondo.jpg';
 import logo from '../../assets/logo.jpg';
-import HelpScreen from "../../pages/helpScreen";
-
-
-//La función de la carpeta de componentes es tener un componente por cada pantalla o cada función que tenga que hacer
-import React, { useState } from "react";
 
 export default function HomeScreen({ navigation }) {
+  // Estados
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [userFocus, setUserFocus] = useState(false);
+  const [passFocus, setPassFocus] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+
+  // Maneja el login
+  const handleLogin = () => {
+    setError('');
+    if (username.trim().length < 4) {
+      setError('El usuario debe tener al menos 4 caracteres.');
+      return;
+    }
+    if (password.trim().length < 8) {
+      setError('La contraseña debe tener al menos 8 caracteres.');
+      return;
+    }
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setError('');
+      navigation.navigate('Settings');
+    }, 1500);
+  };
+
   return (
     <View style={{ flex: 1 }}>
-      <ImageBackground source={fondo} style={{ position: 'absolute', width: '100%', height: '100%', opacity: 0.5 }} resizeMode="cover" />
-      <View style={{ flex: 1, justifyContent: 'center' }}>
-        <Card style={{ backgroundColor: 'rgba(255, 255, 255, 1)', margin: 20, padding: 60, borderRadius: 120 }}>
+      {/* Fondo */}
+      <ImageBackground 
+        source={fondo} 
+        style={{ position: 'absolute', width: '100%', height: '100%', opacity: 0.5 }} 
+        resizeMode="cover" 
+      />
+
+      {/* Contenido principal con KeyboardAvoidingView */}
+      <KeyboardAvoidingView
+        style={{ flex: 1, justifyContent: 'center' }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+      >
+        <Card style={{ backgroundColor: 'rgba(255, 255, 255, 1)', margin: 20, padding: 20, borderRadius: 100 }}>
           <Card.Content>
-            <Image source={logo} style={{ width: 200, height: 200, alignSelf: 'center', marginBottom: 20, borderRadius: 100 }} />
+            {/* Logo y título */}
+            <Image 
+              source={logo} 
+              style={{ width: 200, height: 200, alignSelf: 'center', marginBottom: 20, borderRadius: 100 }} 
+            />
             <Text style={[styles.title, { alignSelf: 'center', marginBottom: 2 }]}>S.A.M.I app</Text>
-            <Text style={{ color: 'gray', alignSelf: 'center', marginTop: 0, marginBottom: 20, fontSize: 16 }}>sign in to continue</Text>
+            <Text style={{ color: 'gray', alignSelf: 'center', marginBottom: 20, fontSize: 16 }}>
+              sign in to continue
+            </Text>
             <StatusBar style="auto" />
 
-            {/* Formulario de usuario y contraseña */}
+            {/* Usuario */}
             <TextInput
-              label="Usuario"
+              label="User Name"
               value={username}
               onChangeText={setUsername}
-              style={{ marginBottom: 12 }}
+              style={styles.textInput}
               mode="outlined"
               autoCapitalize="none"
+              left={<TextInput.Icon icon="account" color={userFocus ? "#004989" : "#888"} />}
+              onFocus={() => setUserFocus(true)}
+              onBlur={() => setUserFocus(false)}
+              theme={{
+                colors: {
+                  primary: '#004989',
+                  text: '#c2c2c2ff',
+                  placeholder: '#888'
+                },
+                roundness: 60
+              }}
             />
+
+            {/* Contraseña */}
             <TextInput
-              label="Contraseña"
+              label="Password"
               value={password}
               onChangeText={setPassword}
-              style={{ marginBottom: 20 }}
+              style={styles.textInput}
               mode="outlined"
-              secureTextEntry
+              secureTextEntry={!showPassword}
+              left={<TextInput.Icon icon="shield-lock" color={passFocus ? "#004989" : "#888"} />}
+              right={
+                <TextInput.Icon
+                  icon={showPassword ? "eye-off" : "eye"}
+                  color={passFocus ? "#004989" : "#888"}
+                  onPress={() => setShowPassword(!showPassword)}
+                  forceTextInputFocus={false}
+                />
+              }
+              onFocus={() => setPassFocus(true)}
+              onBlur={() => setPassFocus(false)}
+              theme={{
+                colors: {
+                  primary: '#004989',
+                  text: '#c2c2c2ff',
+                  placeholder: '#888'
+                },
+                roundness: 60
+              }}
             />
 
-            <Button
-              style={styles.button}
-              labelStyle={styles.buttonLabel}
-              mode="contained"
-              onPress={() => navigation.navigate('Settings')}
-            >
-              Go to Settings
-            </Button>
+            {/* Mensaje de error */}
+            {error ? (
+              <Text style={{ color: 'red', alignSelf: 'center', marginTop: 8, marginBottom: 4 }}>
+                {error}
+              </Text>
+            ) : null}
 
+            {/* Botón Ingresar */}
+            <View style={{ alignItems: 'center' }}>
+              <TouchableOpacity
+                style={[
+                  styles.button,
+                  loading && styles.buttonDisabled,
+                  { marginTop: 8 }
+                ]}
+                onPress={handleLogin}
+                disabled={loading}
+                accessibilityLabel="Botón para iniciar sesión"
+                activeOpacity={0.85}
+              >
+                {loading ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <Text style={styles.buttonLabel}>Ingresar</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+
+            {/* Enlace de ayuda */}
             <TouchableOpacity onPress={() => navigation.navigate('JOSE')} activeOpacity={0.7}>
               <Animated.Text style={{
                 alignSelf: 'center',
@@ -66,7 +167,7 @@ export default function HomeScreen({ navigation }) {
             </TouchableOpacity>
           </Card.Content>
         </Card>
-      </View>
+      </KeyboardAvoidingView>
     </View>
   );
 }

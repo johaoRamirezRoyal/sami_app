@@ -1,9 +1,9 @@
 // 1. React y React Native
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, SafeAreaView, Modal, TouchableWithoutFeedback } from 'react-native';
 
 // 2. Librerías de terceros
-import { useNavigation } from '@react-navigation/native';
+import { getFocusedRouteNameFromRoute, useNavigation } from '@react-navigation/native';
 import { Appbar, IconButton, Drawer } from 'react-native-paper';
 
 // 3. Recursos locales (imágenes)
@@ -11,7 +11,33 @@ import logo from '../../assets/logo.jpg';
 import logoroyal from '../../assets/logoroyal.png';
 import { styles } from '../../styles/inicioEstilo';
 
+
+
+
+
+
+
+
 export default function Inicio() {
+
+  useEffect(() => {
+    getUsers();
+  }, []);
+
+  const getUsers = () => {
+    const URL = "http://192.168.0.107:3000/api/usuarios/"; // Endpoint para todos los usuarios
+    fetch(URL)
+      .then((response) => response.json())
+      .then((data) => {
+        // Mostrar todos los usuarios en consola
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error('Error al obtener usuarios:', error);
+      });
+  };
+
+
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerActive, setDrawerActive] = useState('first');
   const navigation = useNavigation();

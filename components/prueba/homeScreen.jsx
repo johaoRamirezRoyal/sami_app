@@ -16,6 +16,7 @@ import { StatusBar } from 'expo-status-bar';
 import { styles } from "../../styles/prueba/pruebaStyles";
 import fondo from '../../assets/fondo.jpg';
 import logo from '../../assets/logo.jpg';
+import { guardarSesion, obtenerSesion, login } from "../sesion/sesion";
 
 export default function HomeScreen({ navigation }) {
   // Estados
@@ -39,12 +40,36 @@ export default function HomeScreen({ navigation }) {
       return;
     }
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setError('');
-      navigation.navigate('Settings');
-    }, 1500);
+
+    const URL = "http://192.168.0.105:3000/api/usuarios/login";
+    fetch(URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ usuario: username, contraseña: password })
+    })
+      .then(response => response.json())
+      .then(async data => {
+        
+        setLoading(false);
+        if (data && data.token) {
+          setError('');
+          // Guarda la sesión aquí
+          await guardarSesion(data.usuario, data.token);
+          navigation.navigate('Settings');
+        } else {
+          setError(data.token || 'Error al iniciar sesión');
+        }
+      })
+      .catch(error => {
+        setLoading(false);
+        setError('No se pudo conectar al servidor');
+        console.error('Error en login:', error);
+      });
   };
+
+  console.log('Enviando:', { username, password });
 
   return (
     <View style={{ flex: 1 }}>
@@ -136,11 +161,11 @@ export default function HomeScreen({ navigation }) {
               <TouchableOpacity
                 style={[
                   styles.button,
-                  loading && styles.buttonDisabled,
+                  (loading || username.trim().length < 4 || password.trim().length < 8) && styles.buttonDisabled,
                   { marginTop: 8 }
                 ]}
                 onPress={handleLogin}
-                disabled={loading}
+                disabled={loading || username.trim().length < 4 || password.trim().length < 8}
                 accessibilityLabel="Botón para iniciar sesión"
                 activeOpacity={0.85}
               >

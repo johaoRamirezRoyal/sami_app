@@ -10,7 +10,7 @@ import { Appbar, IconButton, Drawer } from 'react-native-paper';
 import logo from '../../assets/logo.jpg';
 import logoroyal from '../../assets/logoroyal.png';
 import { styles } from '../../styles/inicioEstilo';
-
+import { obtenerSesion, cerrarSesion } from '../sesion/sesion';
 
 
 
@@ -19,29 +19,34 @@ import { styles } from '../../styles/inicioEstilo';
 
 
 export default function Inicio() {
-
-  useEffect(() => {
-    getUsers();
-  }, []);
-
-  const getUsers = () => {
-    const URL = "http://192.168.0.107:3000/api/usuarios/"; // Endpoint para todos los usuarios
-    fetch(URL)
-      .then((response) => response.json())
-      .then((data) => {
-        // Mostrar todos los usuarios en consola
-        console.log(data);
-      })
-      .catch((error) => {
-        console.error('Error al obtener usuarios:', error);
-      });
-  };
-
-
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerActive, setDrawerActive] = useState('first');
+  const [sesion, setSesion] = useState(null); // Nuevo estado para la sesión
   const navigation = useNavigation();
 
+  useEffect(() => {
+    const cargarSesion = async () => {
+      const datosSesion = await obtenerSesion();
+      setSesion(datosSesion);
+    };
+    cargarSesion();
+  }, []);
+
+  if (!sesion) {
+    return (
+      <SafeAreaView style={styles.safeArea}>  
+        <View style={styles.container}>
+          <Text style={styles.title}>Cargando sesión...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+  // Extraer datos de la sesión
+  let userSession;
+  if(sesion && sesion.usuario){
+    userSession = sesion.usuario;
+    console.log('Usuario en sesión:', userSession);
+  }
   // Opciones del Drawer como array
   const drawerItems = [
     { label: 'Inicio', key: 'first', icon: 'home' },
@@ -98,10 +103,27 @@ export default function Inicio() {
       {/* Contenido principal */}
       <View style={styles.container}>
         <Image source={logo} style={styles.logo} />
-        <Text style={styles.title}>¡Bienvenido a S.A.M.I app!</Text>
+        <Text style={styles.title}>¡Bienvenido a S.A.M.I app {userSession.nombre}!</Text>
         <Text style={styles.subtitle}>EU me sirvio .</Text>
+        {/* Mostrar información de sesión si existe */}
+        {sesion && sesion.usuario && (
+          <Text style={styles.subtitle}>
+            Usuario: {userSession.nombre || userSession.correo || 'Sin datos'}
+          </Text>
+        )}
         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
           <Text style={styles.buttonText}>Ir al Login</Text>
+        </TouchableOpacity>
+        {/* Botón para cerrar sesión */}
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: '#d32f2f', marginTop: 10 }]}
+          onPress={async () => {
+            await cerrarSesion();
+            setSesion(null);
+            navigation.navigate('Login');
+          }}
+        >
+          <Text style={styles.buttonText}>Cerrar Sesión</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

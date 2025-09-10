@@ -9,6 +9,7 @@ import { Appbar, IconButton, Drawer } from 'react-native-paper';
 // 3. Recursos locales (imágenes)
 import logo from '../../assets/logo.jpg';
 import logoroyal from '../../assets/logoroyal.png';
+import logocomplet from '../../assets/logocomplet.png';
 import { styles } from '../../styles/inicioEstilo';
 import { obtenerSesion, cerrarSesion } from '../sesion/sesion';
 import Prueba from '../../pages/prueba';
@@ -33,7 +34,7 @@ export default function Inicio() {
     return (
       <SafeAreaView style={styles.safeArea}>  
         <View style={styles.container}>
-          <Text style={styles.title}>Cargando sesión...</Text>
+          <Image source={logocomplet} style={styles.logocm} resizeMode="contain" />
         </View>
       </SafeAreaView>
     );

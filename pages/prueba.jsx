@@ -9,9 +9,9 @@ import { TextInput, Button } from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 // 3. Recursos locales (imágenes, estilos y utilidades)
-import logoroyal from '../assets/logoroyal.png'; // Logo de la app
-import { styles } from '../styles/inicioEstilo'; // Estilos personalizados
-import { obtenerSesion, cerrarSesion } from '../components/sesion/sesion'; // Funciones de sesión
+import logoroyal from '../assets/logoroyal.png'; 
+import { styles } from '../styles/inicioEstilo'; 
+import { obtenerSesion, cerrarSesion } from '../components/sesion/sesion'; 
 
 // Componente principal de la pantalla
 export default function Inicio() {

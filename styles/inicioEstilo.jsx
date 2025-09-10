@@ -88,12 +88,19 @@ export const styles = StyleSheet.create({
     elevation: 8,
   },
   logo: {
-    width: 160,
-    height: 160,
-    marginBottom: 24,
-    borderRadius: 80,
-    backgroundColor: '#dfe4ea',
+    width: 150,
+    height: 150,
+    alignSelf: 'center',
+    marginVertical: 20,
   },
+
+  logocm: {
+    width: 250,
+    height: 250,
+    alignSelf: 'center',
+    marginVertical: 20,
+  },
+
   title: {
     fontSize: 26,
     fontWeight: 'bold',

@@ -20,10 +20,14 @@
         "foregroundImage": "./assets/icono.jpg",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.anonymous.sami_app"
     },
     "web": {
       "favicon": "././assets/icono.jpg"
-    }
+    },
+    "plugins": [
+      "expo-barcode-scanner"
+    ]
   }
 }

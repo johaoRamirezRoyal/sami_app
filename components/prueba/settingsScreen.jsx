@@ -11,10 +11,7 @@ import logo from '../../assets/logo.jpg';
 import logoroyal from '../../assets/logoroyal.png';
 import { styles } from '../../styles/inicioEstilo';
 import { obtenerSesion, cerrarSesion } from '../sesion/sesion';
-
-
-
-
+import Prueba from '../../pages/prueba';
 
 
 
@@ -77,7 +74,13 @@ export default function Inicio() {
                   label={item.label}
                   icon={item.icon}
                   active={isActive}
-                  onPress={() => { setDrawerActive(item.key); setDrawerVisible(false); }}
+                  onPress={() => {
+                    setDrawerActive(item.key);
+                    setDrawerVisible(false);
+                    if (item.key === 'quarter') {
+                      navigation.navigate('Prueba');
+                    }
+                  }}
                   style={isActive ? styles.drawerItemActive : styles.drawerItem}
                   labelStyle={isActive ? styles.drawerItemLabelActive : styles.drawerItemLabel}
                 />
@@ -129,3 +132,4 @@ export default function Inicio() {
     </SafeAreaView>
   );
 }
+

@@ -1,5 +1,3 @@
-
-
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -42,25 +40,26 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
-        {/* MAL ERROR DE ARQUITECTURA */}
         <Stack.Screen 
           name="Login" 
           component={HomeScreen} 
           options={{ headerShown: false }}
-          />
+        />
         <Stack.Screen 
           name="Settings" 
           component={SettingsScreen} 
           options={{ headerShown: false }}
         />
-        {/* --------------------------------------------------- */}
         <Stack.Screen 
           name="JOSE" 
           component={HelpNav} 
           options={getLogoHeaderOptions()} 
-          
         />
-        
+        <Stack.Screen 
+          name="Prueba" 
+          component={Prueba} 
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

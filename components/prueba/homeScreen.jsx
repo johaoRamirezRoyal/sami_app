@@ -41,7 +41,7 @@ export default function HomeScreen({ navigation }) {
     }
     setLoading(true);
 
-    const URL = "http://192.168.0.105:3000/api/usuarios/login";
+    const URL = "http://192.168.0.107:3000/api/usuarios/login";
     fetch(URL, {
       method: 'POST',
       headers: {

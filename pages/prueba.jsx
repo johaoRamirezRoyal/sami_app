@@ -36,6 +36,9 @@ export default function Inicio() {
   const [fecha, setFecha] = useState(null);
   const [showPicker, setShowPicker] = useState(false);
 
+  // 1. Agrega un estado para las asistencias
+  const [asistencias, setAsistencias] = useState([]);
+
   // Maneja el cambio de fecha en el DateTimePicker
   const onChangeFecha = (event, selectedDate) => {
     setShowPicker(false);
@@ -55,6 +58,20 @@ export default function Inicio() {
   useEffect(() => {
     setPage(0);
   }, [itemsPerPage]);
+
+  // 2. Fetch de asistencias al montar el componente
+  useEffect(() => {
+    const fetchAsistencias = async () => {
+      try {
+        const response = await fetch('http://192.168.0.107:3000/api/asistencias_estudiantes/asistenciasDiaHoy');
+        const data = await response.json();
+        setAsistencias(data); // Ajusta según la estructura de tu respuesta
+      } catch (error) {
+        console.error('Error al obtener asistencias:', error);
+      }
+    };
+    fetchAsistencias();
+  }, []);
 
   // Muestra pantalla de carga si la sesión aún no está disponible
   if (!sesion || !sesion.usuario) {
@@ -76,6 +93,24 @@ export default function Inicio() {
     { label: 'impuntualidad', key: 'quarter', icon: 'alert' },
   ];
 
+
+
+
+  // Componente para mostrar si la asistencia es puntual o impuntual
+  function EstadoAsistencia({ hora }) {
+    // Suponiendo formato "HH:mm"
+    if (!hora) return null;
+    const [h, m] = hora.split(':').map(Number);
+    // 15:30 es puntual o antes
+    if (h < 7 || (h === 7 && m <= 0)) {
+      return <Text style={{ color: 'green', fontWeight: 'bold' }}>puntual</Text>;
+    }
+    return <Text style={{ color: 'red', fontWeight: 'bold' }}>impuntual</Text>;
+  }
+
+
+
+  
   // Renderizado principal
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -145,8 +180,7 @@ export default function Inicio() {
         <View style={{ alignItems: 'center', marginVertical: 30 }}>
           <TouchableOpacity
             onPress={() => {
-              // Acción al presionar el botón de cámara
-              console.log('Botón Cámara presionado');
+              navigation.navigate('Camera');
             }}
             activeOpacity={0.7}
             style={{
@@ -200,18 +234,33 @@ export default function Inicio() {
         </View>
 
 
-        {/* Tabla de datos vacía con scroll horizontal */}
+        {/* Tabla de datos con header fijo y scroll horizontal/vertical solo en el cuerpo */}
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <DataTable>
-            <DataTable.Header>
-              <DataTable.Title style={{ minWidth: 120 }}>Asistencia</DataTable.Title>
-              <DataTable.Title style={{ minWidth: 120 }}>Documentos</DataTable.Title>
-              <DataTable.Title style={{ minWidth: 120 }}>Nombre</DataTable.Title>
-              <DataTable.Title style={{ minWidth: 120 }}>Fecha</DataTable.Title>
-              <DataTable.Title style={{ minWidth: 10 }}>Hora</DataTable.Title>
-            </DataTable.Header>
-            {/* Sin filas ni paginación porque la tabla está vacía */}
-          </DataTable>
+          <View>
+            <DataTable>
+              <DataTable.Header>
+                <DataTable.Title style={{ minWidth: 120 }}>Asistencia</DataTable.Title>
+                <DataTable.Title style={{ minWidth: 120 }}>Documentos</DataTable.Title>
+                <DataTable.Title style={{ minWidth: 120 }}>Fecha</DataTable.Title>
+                <DataTable.Title style={{ minWidth: 10 }}>Hora</DataTable.Title>
+              </DataTable.Header>
+            </DataTable>
+            <ScrollView style={{ maxHeight: 300 }} showsVerticalScrollIndicator={true}>
+              <DataTable>
+                {/* Renderiza las filas de asistencias */}
+                {asistencias.map((asistencia, idx) => (
+                  <DataTable.Row key={idx}>
+                    <DataTable.Cell style={{ minWidth: 120 }}>
+                      <EstadoAsistencia hora={asistencia.hora_registro} />
+                    </DataTable.Cell>
+                    <DataTable.Cell style={{ minWidth: 120 }}>{asistencia.documento}</DataTable.Cell>
+                    <DataTable.Cell style={{ minWidth: 120 }}>{new Date(asistencia.fecha_registro).toLocaleDateString('es-ES')}</DataTable.Cell>
+                    <DataTable.Cell style={{ minWidth: 10 }}>{asistencia.hora_registro}</DataTable.Cell>
+                  </DataTable.Row>
+                ))}
+              </DataTable>
+            </ScrollView>
+          </View>
         </ScrollView>
       </View>
     </SafeAreaView>

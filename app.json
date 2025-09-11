@@ -27,7 +27,15 @@
       "favicon": "././assets/icono.jpg"
     },
     "plugins": [
-      "expo-barcode-scanner"
+      "expo-barcode-scanner",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "ALLOW $(PRODUCT_NAME) TO ACCESS THE CAMERA",
+          "microphonePermission": "ALLOW $(PRODUCT_NAME) TO ACCESS THE MICROPHONE",
+          "recordAudioAndroid": true
+        }
+      ]
     ]
   }
 }

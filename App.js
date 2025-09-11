@@ -9,6 +9,7 @@ import SettingsScreen from './components/prueba/settingsScreen';
 import Prueba from './pages/prueba';
 import HelpScreen from './pages/helpScreen';
 import HelpNav from './pages/helpNavegation';
+import CamerScreen from './components/prueba/camerScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -59,6 +60,11 @@ export default function App() {
           name="Prueba" 
           component={Prueba} 
           options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name="Camera" 
+          component={CamerScreen}
+          options={getLogoHeaderOptions()} 
         />
       </Stack.Navigator>
     </NavigationContainer>

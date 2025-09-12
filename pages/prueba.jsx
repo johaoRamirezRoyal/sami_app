@@ -193,12 +193,12 @@ export default function Inicio() {
           >
             <IconButton
               icon="qrcode-scan"
-              size={100}
+              size={120}
               color="#004989"
               style={{ backgroundColor: 'transparent' }}
               onPress={null}
             />
-            <Text style={{ color: '#004989', fontWeight: 'bold', fontSize: 18, marginTop: 8 }}>
+            <Text style={{ color: '#004989', fontWeight: 'bold', fontSize: 18, marginTop: 0 }}>
               Registrar asistencia
             </Text>
           </TouchableOpacity>
@@ -216,7 +216,7 @@ export default function Inicio() {
               marginLeft: 0, // Separación del borde izquierdo
             }}
           >
-            Asistencias ✔
+            Llegadas tardes 
           </Text>
           {/* Línea divisoria gris  */}
           <View
@@ -239,8 +239,9 @@ export default function Inicio() {
           <View>
             <DataTable>
               <DataTable.Header>
-                <DataTable.Title style={{ minWidth: 120 }}>Asistencia</DataTable.Title>
                 <DataTable.Title style={{ minWidth: 120 }}>Documentos</DataTable.Title>
+                <DataTable.Title style={{ minWidth: 200 }}>Nombre</DataTable.Title>
+                <DataTable.Title style={{ minWidth: 120 }}>Curso</DataTable.Title>
                 <DataTable.Title style={{ minWidth: 120 }}>Fecha</DataTable.Title>
                 <DataTable.Title style={{ minWidth: 10 }}>Hora</DataTable.Title>
               </DataTable.Header>
@@ -250,10 +251,9 @@ export default function Inicio() {
                 {/* Renderiza las filas de asistencias */}
                 {asistencias.map((asistencia, idx) => (
                   <DataTable.Row key={idx}>
-                    <DataTable.Cell style={{ minWidth: 120 }}>
-                      <EstadoAsistencia hora={asistencia.hora_registro} />
-                    </DataTable.Cell>
                     <DataTable.Cell style={{ minWidth: 120 }}>{asistencia.documento}</DataTable.Cell>
+                    <DataTable.Cell style={{ minWidth: 200 }}>{asistencia.nom_user}</DataTable.Cell>
+                    <DataTable.Cell style={{ minWidth: 120 }}>{asistencia.nombre_curso}</DataTable.Cell>
                     <DataTable.Cell style={{ minWidth: 120 }}>{new Date(asistencia.fecha_registro).toLocaleDateString('es-ES')}</DataTable.Cell>
                     <DataTable.Cell style={{ minWidth: 10 }}>{asistencia.hora_registro}</DataTable.Cell>
                   </DataTable.Row>

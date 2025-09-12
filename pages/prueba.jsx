@@ -11,7 +11,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 // 3. Recursos locales (imágenes, estilos y utilidades)
 import logoroyal from '../assets/logoroyal.png'; 
 import { styles } from '../styles/inicioEstilo'; 
-import { obtenerSesion, cerrarSesion } from '../components/sesion/sesion'; 
+import { obtenerSesion, cerrarSesion } from '../components/sesion/sesion';
+import { BASE_URL } from '../components/api/urlApi'; 
 
 // Componente principal de la pantalla
 export default function Inicio() {
@@ -63,8 +64,9 @@ export default function Inicio() {
   useEffect(() => {
     const fetchAsistencias = async () => {
       try {
-        const response = await fetch('http://192.168.0.107:3000/api/asistencias_estudiantes/asistenciasDiaHoy');
+        const response = await fetch(`${BASE_URL}/asistencias_estudiantes/asistenciasDiaHoy`);
         const data = await response.json();
+        console.log('Asistencias obtenidas:', data); // Verifica la respuesta
         setAsistencias(data); // Ajusta según la estructura de tu respuesta
       } catch (error) {
         console.error('Error al obtener asistencias:', error);
@@ -240,7 +242,7 @@ export default function Inicio() {
             <DataTable>
               <DataTable.Header>
                 <DataTable.Title style={{ minWidth: 120 }}>Documentos</DataTable.Title>
-                <DataTable.Title style={{ minWidth: 200 }}>Nombre</DataTable.Title>
+                <DataTable.Title style={{ minWidth: 250 }}>Nombre</DataTable.Title>
                 <DataTable.Title style={{ minWidth: 120 }}>Curso</DataTable.Title>
                 <DataTable.Title style={{ minWidth: 120 }}>Fecha</DataTable.Title>
                 <DataTable.Title style={{ minWidth: 10 }}>Hora</DataTable.Title>
@@ -252,7 +254,7 @@ export default function Inicio() {
                 {asistencias.map((asistencia, idx) => (
                   <DataTable.Row key={idx}>
                     <DataTable.Cell style={{ minWidth: 120 }}>{asistencia.documento}</DataTable.Cell>
-                    <DataTable.Cell style={{ minWidth: 200 }}>{asistencia.nom_user}</DataTable.Cell>
+                    <DataTable.Cell style={{ minWidth: 250 }}>{asistencia.nom_user}</DataTable.Cell>
                     <DataTable.Cell style={{ minWidth: 120 }}>{asistencia.nombre_curso}</DataTable.Cell>
                     <DataTable.Cell style={{ minWidth: 120 }}>{new Date(asistencia.fecha_registro).toLocaleDateString('es-ES')}</DataTable.Cell>
                     <DataTable.Cell style={{ minWidth: 10 }}>{asistencia.hora_registro}</DataTable.Cell>

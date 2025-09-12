@@ -15,6 +15,7 @@ import { useCameraPermissions, CameraView } from 'expo-camera';
 import { Canvas, DiffRect, rect, rrect } from "@shopify/react-native-skia";
 import CustomAlert from '../helpComponent/alert';
 import { useNavigation } from '@react-navigation/native';
+import { BASE_URL } from '../api/urlApi';
 
 // ===================
 // Configuración Overlay
@@ -119,7 +120,8 @@ export default function CamerScreen() {
                 }
 
                 try {
-                  const response = await fetch("http://192.168.0.107:3000/api/asistencias_estudiantes/registrarAsistencia", {
+                  // API URL AKI
+                  const response = await fetch(`${BASE_URL}/asistencias_estudiantes/registrarAsistencia`, {
                     method: "POST",
                     headers: {
                       "Content-Type": "application/json"

@@ -20,9 +20,3 @@ export const loginStyles = StyleSheet.create({
     color: '#333',
   },
 });
-
-// Ejemplo de uso en un input dentro de HomeScreen:
-// <View style={loginStyles.inputContainer}>
-//   <Icon name="user" style={loginStyles.inputIcon} />
-//   <TextInput style={loginStyles.input} placeholder="Usuario" />
-// </View>

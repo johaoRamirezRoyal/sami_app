@@ -1,4 +1,4 @@
-import { Camera, CameraView } from "expo-camera";
+import { CameraView } from "expo-camera";
 import { Stack } from "expo-router";
 import {
   AppState,

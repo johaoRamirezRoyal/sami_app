@@ -33,13 +33,15 @@ export default function BarraNav({ activeItemKey = "first" }) {
   }, []);
 
   // Mostrar mensaje de carga si no hay sesión
-  if (!sesion) {
-    return (
-      <View style={styles.container}>
-        <Text>Cargando sesión...</Text>
-      </View>
-    );
-  }
+    if (!sesion) {
+      return (
+        <SafeAreaView style={styles.safeArea}>  
+          <View style={styles.container}>
+            <Image source={logocomplet} style={styles.logocm} resizeMode="contain" />
+          </View>
+        </SafeAreaView>
+      );
+    }
 
   // Iniciales del usuario
   const iniciales_nombre = sesion.usuario.nombre.slice(0, 2).toUpperCase();

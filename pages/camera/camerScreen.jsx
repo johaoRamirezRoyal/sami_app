@@ -13,9 +13,9 @@ import {
 } from 'react-native';
 import { useCameraPermissions, CameraView } from 'expo-camera';
 import { Canvas, DiffRect, rect, rrect } from "@shopify/react-native-skia";
-import CustomAlert from '../helpComponent/alert';
+import CustomAlert from '../../components/notification/alert';
 import { useNavigation } from '@react-navigation/native';
-import { BASE_URL } from '../api/urlApi';
+import { BASE_URL } from '../../components/api/urlApi';
 
 // ===================
 // Configuración Overlay
@@ -114,7 +114,7 @@ export default function CamerScreen() {
                   setAlertVisible(true);
                   setTimeout(() => {
                     setAlertVisible(false);
-                    navigation.navigate('Prueba'); // Asegúrate que el nombre de la ruta sea correcto
+                    navigation.navigate('llegadas_tarde'); // Asegúrate que el nombre de la ruta sea correcto
                   }, 1000); // <-- Cambiado a 1 segundo
                   return;
                 }
@@ -135,7 +135,7 @@ export default function CamerScreen() {
                     setAlertVisible(true);
                     setTimeout(() => {
                       setAlertVisible(false);
-                      navigation.navigate('Prueba');
+                      navigation.navigate('llegadas_tarde');
                     }, 1000); // <-- Cambiado a 1 segundo
                     return;
                   } else {
@@ -144,7 +144,7 @@ export default function CamerScreen() {
                     setAlertVisible(true);
                     setTimeout(() => {
                       setAlertVisible(false);
-                      navigation.navigate('Prueba');
+                      navigation.navigate('llegadas_tarde');
                     }, 500); // <-- Cambiado a 1 segundo
                     return;
                   }

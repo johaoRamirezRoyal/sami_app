@@ -13,12 +13,12 @@ import {
 import { Button, Card, TextInput } from "react-native-paper";
 import { StatusBar } from 'expo-status-bar';
 
-import { styles } from "../../styles/prueba/pruebaStyles";
+import { styles } from "../../styles/login/logiStyle";
 import fondo from '../../assets/fondo.jpg';
 import logo from '../../assets/logo.jpg';
-import { guardarSesion, obtenerSesion, login } from "../sesion/sesion";
+import { guardarSesion, obtenerSesion, login } from "../../components/sesion/sesion";
 
-export default function HomeScreen({ navigation }) {
+export default function Login_s ({ navigation }) {
   // Estados
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -57,7 +57,7 @@ export default function HomeScreen({ navigation }) {
           setError('');
           // Guarda la sesión aquí
           await guardarSesion(data.usuario, data.token);
-          navigation.navigate('Settings');
+          navigation.navigate('inicio');
         } else {
           setError(data.token || 'Error al iniciar sesión');
         }
@@ -69,7 +69,6 @@ export default function HomeScreen({ navigation }) {
       });
   };
 
-  console.log('Enviando:', { username, password });
 
   return (
     <View style={{ flex: 1 }}>

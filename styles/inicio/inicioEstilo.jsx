@@ -43,17 +43,13 @@ export const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,73,137,0.5)', // #004989 con 50% opacidad
   },
   drawerItemLabel: {
-    color: '#004989',
+    color: '#222', // Color normal para los demás
     fontWeight: 'bold',
     fontSize: 16,
   },
   drawerItemLabelActive: {
-    color: '#fff',
+    color: '#fff', // Color blanco para el texto activo
     fontWeight: 'bold',
-    fontSize: 16,
-    textShadowColor: 'rgba(0,0,0,0.15)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
   },
   // Barra de navegación superior flotante
   appbar: {

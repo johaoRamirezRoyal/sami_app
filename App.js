@@ -4,19 +4,20 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { Image } from 'react-native';
 
 
-import HomeScreen from './components/prueba/homeScreen';
-import SettingsScreen from './components/prueba/settingsScreen';
-import Prueba from './pages/prueba';
-import HelpScreen from './pages/helpScreen';
-import HelpNav from './pages/helpNavegation';
-import CamerScreen from './components/prueba/camerScreen';
+import Login_s from './pages/login/login_Sami';
+import Inicio from './pages/inicio/inicio';
+import llegadas_tarde from './pages/llegadas_tardes/asistencia';
+import HelpNav from './pages/help/helpNavegation';
+import CamerScreen from './pages/camera/camerScreen';
+import Reserve from './pages/reserve/reserve';
+import inventario from './pages/lis.Inventario/lis.Inventario';
 
 
 const Stack = createNativeStackNavigator();
 
 
 // Función reutilizable para las opciones del header con logo y back
-function getLogoHeaderOptions(extraOptions = {}) {
+function   getLogoHeaderOptions(extraOptions = {}) {
   return ({ navigation }) => ({
     headerTitle: () => (
       <Image
@@ -43,12 +44,12 @@ export default function App() {
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen 
           name="Login" 
-          component={HomeScreen} 
+          component={Login_s} 
           options={{ headerShown: false }}
         />
         <Stack.Screen 
-          name="Settings" 
-          component={SettingsScreen} 
+          name="inicio" 
+          component={Inicio} 
           options={{ headerShown: false }}
         />
         <Stack.Screen 
@@ -57,14 +58,24 @@ export default function App() {
           options={getLogoHeaderOptions()} 
         />
         <Stack.Screen 
-          name="Prueba" 
-          component={Prueba} 
+          name="llegadas_tarde" 
+          component={llegadas_tarde} 
           options={{ headerShown: false }}
         />
         <Stack.Screen 
           name="Camera" 
           component={CamerScreen}
           options={getLogoHeaderOptions()} 
+        />
+        <Stack.Screen 
+          name="reserve" 
+          component={Reserve}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name="inventario" 
+          component={inventario} 
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

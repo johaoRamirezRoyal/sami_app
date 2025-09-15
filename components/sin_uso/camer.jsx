@@ -13,8 +13,10 @@ import { useEffect, useRef } from "react";
 
 // Componente principal da tela de câmera
 export default function Home() {
+
   // Ref para bloquear múltiplas leituras de QR Code
   const qrLock = useRef(false);
+  
   // Ref para controlar o estado do app (ativo/inativo)
   const appState = useRef(AppState.currentState);
 

@@ -14,7 +14,6 @@
     "@expo/metro-runtime": "~5.0.4",
     "@react-native-async-storage/async-storage": "2.1.2",
     "@react-native-community/datetimepicker": "8.4.1",
-    "@react-native-vector-icons/material-design-icons": "^12.3.0",
     "@react-navigation/native": "^7.1.17",
     "@react-navigation/native-stack": "^7.3.26",
     "@react-navigation/stack": "^7.4.8",
@@ -39,8 +38,7 @@
     "react-native-vision-camera": "^4.7.2",
     "react-native-web": "^0.20.0",
     "react-native-webview": "13.13.5",
-    "react-native-youtube-iframe": "^2.4.1",
-    "vision-camera-code-scanner": "^0.2.0"
+    "react-native-youtube-iframe": "^2.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

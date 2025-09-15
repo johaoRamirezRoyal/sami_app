@@ -8,7 +8,7 @@ import { Appbar, IconButton, Drawer } from 'react-native-paper';
 import logo from '../../assets/logo.jpg';
 import logocomplet from '../../assets/logocomplet.png';
 import { styles } from '../../styles/inicio/inicioEstilo';
-import { obtenerSesion, cerrarSesion } from '../../components/sesion/sesion';
+import { obtenerSesion } from '../../components/sesion/sesion';
 import BarraNav from '../../components/nav/barra_nav'; // <--- Agrega esta línea
 
 // 3. Componente principal de la pantalla de inicio
@@ -41,7 +41,6 @@ export default function Inicio() {
   let userSession;
   if (sesion && sesion.usuario) {
     userSession = sesion.usuario;
-    console.log('Usuario en sesión:', userSession);
   }
 
 
@@ -52,20 +51,10 @@ export default function Inicio() {
       
 
       {/* Contenido principal de bienvenida */}
-      <View style={styles.container}>
+      <View style={[styles.container, { justifyContent: 'flex-start', marginTop: 20 }]}>
         <Image source={logo} style={styles.logo} />
-        <Text style={styles.title}>¡Bienvenido a S.A.M.I app {userSession.nombre}!</Text>
-        {/* Botón para cerrar sesión */}
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: '#d32f2f', marginTop: 10 }]}
-          onPress={async () => {
-            await cerrarSesion();
-            setSesion(null);
-            navigation.navigate('Login');
-          }}
-        >
-          <Text style={styles.buttonText}>Cerrar Sesión</Text>
-        </TouchableOpacity>
+        <Text style={styles.title}>¡Bienvenido a S.A.M.I app!</Text>
+        <Text style={styles.title}>{userSession.nombre}</Text>
       </View>
     </SafeAreaView>
   );

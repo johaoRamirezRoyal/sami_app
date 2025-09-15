@@ -133,7 +133,7 @@ export default function Inicio() {
                     <DataTable.Cell style={{ minWidth: 120 }}>
                       {new Date(asistencia.fecha_registro).toLocaleDateString('es-ES')}
                     </DataTable.Cell>
-                    <DataTable.Cell style={{ minWidth: 10 }}>{asistencia.hora_registro}</DataTable.Cell>
+                    <DataTable.Cell style={{ minWidth: 20 }}>{asistencia.hora_registro}</DataTable.Cell>
                   </DataTable.Row>
                 ))}
               </DataTable>

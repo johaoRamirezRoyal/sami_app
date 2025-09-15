@@ -5,7 +5,7 @@ const guardarSesion = async (usuario, token) => {
   try {
     await AsyncStorage.setItem('@usuario', JSON.stringify(usuario));
     await AsyncStorage.setItem('@token', token);
-        console.log('Sesión guardada correctamente');
+      
   } catch (error) {
     console.error('Error al guardar la sesión:', error);
   }

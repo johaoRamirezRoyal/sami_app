@@ -4,13 +4,14 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { Image } from 'react-native';
 
 
-import Login_s from './pages/login/login_Sami';
+import login_s from './pages/login/login_Sami';
 import Inicio from './pages/inicio/inicio';
 import llegadas_tarde from './pages/llegadas_tardes/asistencia';
 import HelpNav from './pages/help/helpNavegation';
 import CamerScreen from './pages/camera/camerScreen';
 import Reserve from './pages/reserve/reserve';
 import inventario from './pages/lis.Inventario/lis.Inventario';
+import SplashScreen from './pages/login/cargalogin';
 
 
 const Stack = createNativeStackNavigator();
@@ -41,10 +42,15 @@ function   getLogoHeaderOptions(extraOptions = {}) {
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="carga">
+        <Stack.Screen 
+          name="carga" 
+          component={SplashScreen} 
+          options={{ headerShown: false }}
+        />
         <Stack.Screen 
           name="Login" 
-          component={Login_s} 
+          component={login_s} 
           options={{ headerShown: false }}
         />
         <Stack.Screen 

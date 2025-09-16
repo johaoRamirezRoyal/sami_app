@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "sami_app",
-    "slug": "sami_app",
+    "name": "SAMI.app",
+    "slug": "SAMI.app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icono.png",
+    "icon": "./assets/.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/icono.png",
+      "image": "./assets/icono.jpg",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,18 +17,18 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icono.png",
+        "foregroundImage": "./assets/icono.jpg",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.anonymous.sami_app",
+      "package": "com.anonymous.SAMI.app",
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
       ]
     },
     "web": {
-      "favicon": "././assets/icono.png"
+      "favicon": "././assets/icono.jpg"
     },
     "plugins": [
       [

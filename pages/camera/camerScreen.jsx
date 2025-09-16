@@ -9,17 +9,17 @@ import {
   Linking, 
   Platform, 
   StatusBar, 
-  Dimensions 
+  Dimensions,
+  Animated 
 } from 'react-native';
 import { useCameraPermissions, CameraView } from 'expo-camera';
 import { Canvas, DiffRect, rect, rrect } from "@shopify/react-native-skia";
+import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import CustomAlert from '../../components/notification/alert';
 import { useNavigation } from '@react-navigation/native';
 import { BASE_URL } from '../../components/api/urlApi';
 
-// ===================
-// Configuración Overlay
-// ===================
 const { width, height } = Dimensions.get("window");
 const innerDimension = 300;
 const outer = rrect(rect(0, 0, width, height), 0, 0);
@@ -34,27 +34,33 @@ const inner = rrect(
   50
 );
 
-// Overlay visual para enfocar el área de escaneo
 const Overlay = () => (
   <Canvas style={Platform.OS === "android" ? { flex: 1 } : StyleSheet.absoluteFillObject}>
     <DiffRect inner={inner} outer={outer} color="black" opacity={0.5} />
   </Canvas>
 );
 
-export default function CamerScreen() {
-  // Permisos de cámara
+export default function CameraScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const isPermissionGranted = Boolean(permission?.granted);
 
-  // Referencias para controlar el escaneo y el estado de la app
   const qrLock = useRef(false);
   const appState = useRef(AppState.currentState);
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
-  const [alertType, setAlertType] = useState('success'); // 'success' o 'error'
+  const [alertType, setAlertType] = useState('success');
   const navigation = useNavigation();
 
-  // Resetear el bloqueo del QR al volver a la app
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 600,
+      useNativeDriver: true,
+    }).start();
+  }, []);
+
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
       if (
@@ -68,162 +74,167 @@ export default function CamerScreen() {
     return () => subscription.remove();
   }, []);
 
-  // ===================
-  // Renderizado principal
-  // ===================
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Pantalla de Cámara</Text>
-      <View style={styles.card}>
-        <Pressable
-          onPress={requestPermission}
-          style={({ pressed }) => [
-            styles.button,
-            pressed && styles.buttonPressed,
-          ]}
-        >
-          <Text style={styles.buttonText}>Solicitar Permisos</Text>
-        </Pressable>
-      </View>
-      <Text style={styles.infoText}>
-        {isPermissionGranted
-          ? 'Permiso concedido. Puedes abrir la cámara.'
-          : 'Debes conceder permisos para usar la cámara.'}
-      </Text>
+    <LinearGradient colors={['#004989', '#7C4DFF']} style={styles.gradient}>
+      <SafeAreaView style={styles.container}>
+        {!isPermissionGranted && (
+          <Animated.View style={[styles.card, { opacity: fadeAnim, transform: [{ translateY: fadeAnim.interpolate({ inputRange: [0, 1], outputRange: [20, 0] }) }] }]}>
+            <Ionicons name="camera-outline" size={72} color="#004989" style={{ marginBottom: 16 }} />
+            <Text style={styles.cardTitle}>Activa tu Cámara</Text>
+            <Text style={styles.cardSubtitle}>
+              Necesitamos tu permiso para acceder a la cámara y escanear códigos QR de asistencia.
+            </Text>
 
-      {/* Cámara y overlay solo si hay permisos */}
-      {isPermissionGranted && (
-        <View style={StyleSheet.absoluteFill}>
-          {Platform.OS === 'android' && <StatusBar hidden />}
-          <CameraView
-            style={StyleSheet.absoluteFill}
-            facing="back"
-            onBarcodeScanned={async ({ data }) => {
-              if (data && !qrLock.current) {
-                const ahora = new Date();
-                let info_asistencia = {
-                    documento: data,
-                    fecha_registro: ahora.toISOString().slice(0, 10),
-                    hora_registro: ahora.toTimeString().substring(0, 8)
-                };
-                qrLock.current = true;
+            <Pressable
+              onPress={requestPermission}
+              style={({ pressed }) => [
+                styles.button,
+                pressed && styles.buttonPressed,
+              ]}
+            >
+              <Ionicons name="key-outline" size={22} color="white" />
+              <Text style={styles.buttonText}>Conceder Permiso</Text>
+            </Pressable>
+          </Animated.View>
+        )}
 
-                if(data.error){
-                  setAlertMessage(`Error al leer el código QR: ${data.error}`);
-                  setAlertType('error');
-                  setAlertVisible(true);
-                  setTimeout(() => {
-                    setAlertVisible(false);
-                    navigation.navigate('llegadas_tarde'); // Asegúrate que el nombre de la ruta sea correcto
-                  }, 1000); // <-- Cambiado a 1 segundo
-                  return;
-                }
+        {isPermissionGranted && (
+          <View style={StyleSheet.absoluteFill}>
+            {Platform.OS === 'android' && <StatusBar hidden />}
+            <CameraView
+              style={StyleSheet.absoluteFill}
+              facing="back"
+              onBarcodeScanned={async ({ data }) => {
+                if (data && !qrLock.current) {
+                  const ahora = new Date();
+                  let info_asistencia = {
+                      documento: data,
+                      fecha_registro: ahora.toISOString().slice(0, 10),
+                      hora_registro: ahora.toTimeString().substring(0, 8)
+                  };
+                  qrLock.current = true;
 
-                try {
-                  // API URL AKI
-                  const response = await fetch(`${BASE_URL}/asistencias_estudiantes/registrarAsistencia`, {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(info_asistencia)
-                  });
-                  const result = await response.json();
-                  if(result.error){
-                    setAlertMessage(`Error al tomar asistencia`);
+                  if(data.error){
+                    setAlertMessage(`Error al leer el código QR: ${data.error}`);
                     setAlertType('error');
                     setAlertVisible(true);
                     setTimeout(() => {
                       setAlertVisible(false);
                       navigation.navigate('llegadas_tarde');
-                    }, 1000); // <-- Cambiado a 1 segundo
-                    return;
-                  } else {
-                    setAlertMessage('Asistencia registrada con éxito');
-                    setAlertType('success');
-                    setAlertVisible(true);
-                    setTimeout(() => {
-                      setAlertVisible(false);
-                      navigation.navigate('llegadas_tarde');
-                    }, 500); // <-- Cambiado a 1 segundo
+                    }, 1000);
                     return;
                   }
-                } catch (error) {
-                  console.error('Error registrando asistencia:', error);
-                }
 
-                setTimeout(async () => {
-                  await Linking.openURL(data);
-                }, 500);
-              }
-            }}
+                  try {
+                    const response = await fetch(`${BASE_URL}/asistencias_estudiantes/registrarAsistencia`, {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json"
+                      },
+                      body: JSON.stringify(info_asistencia)
+                    });
+                    const result = await response.json();
+                    if(result.error){
+                      setAlertMessage(`Error al tomar asistencia`);
+                      setAlertType('error');
+                      setAlertVisible(true);
+                      setTimeout(() => {
+                        setAlertVisible(false);
+                        navigation.navigate('llegadas_tarde');
+                      }, 1000);
+                    } else {
+                      setAlertMessage('Asistencia registrada con éxito');
+                      setAlertType('success');
+                      setAlertVisible(true);
+                      setTimeout(() => {
+                        setAlertVisible(false);
+                        navigation.navigate('llegadas_tarde');
+                      }, 500);
+                    }
+                  } catch (error) {
+                    console.error('Error registrando asistencia:', error);
+                  }
+
+                  setTimeout(async () => {
+                    await Linking.openURL(data);
+                  }, 500);
+                }
+              }}
+            />
+            <Overlay />
+          </View>
+        )}
+
+        {alertVisible && (
+          <CustomAlert
+            message={alertMessage}
+            type={alertType}
+            onClose={() => setAlertVisible(false)}
           />
-          <Overlay />
-        </View>
-      )}
-      {alertVisible && (
-        <CustomAlert
-          message={alertMessage}
-          type={alertType} // <-- Nueva prop
-          onClose={() => setAlertVisible(false)}
-        />
-      )}
-    </SafeAreaView>
+        )}
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
 
-// ===================
-// Estilos
-// ===================
 const styles = StyleSheet.create({
+  gradient: {
+    flex: 1,
+  },
   container: {
     flex: 1,
-    backgroundColor: '#F4F6FB',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 24,
   },
-  title: {
-    color: '#1A237E',
-    fontSize: 36,
-    fontWeight: 'bold',
-    marginBottom: 32,
-    letterSpacing: 1,
-  },
   card: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 32,
+    borderRadius: 28,
+    padding: 30,
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOpacity: 0.08,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 4,
-    gap: 24,
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 5 },
+    elevation: 8,
+    width: '88%',
+  },
+  cardTitle: {
+    fontSize: 26,
+    fontWeight: '800',
+    color: '#004989',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  cardSubtitle: {
+    fontSize: 16,
+    color: '#555',
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 22,
   },
   button: {
-    backgroundColor: '#0E7AFE',
-    borderRadius: 12,
-    paddingVertical: 16,
-    paddingHorizontal: 40,
-    marginVertical: 8,
-    minWidth: 200,
+    flexDirection: 'row',
+    gap: 10,
+    backgroundColor: '#004989',
+    borderRadius: 20,
+    paddingVertical: 14,
+    paddingHorizontal: 28,
     alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#004989',
+    shadowOpacity: 0.4,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 5,
   },
   buttonPressed: {
-    opacity: 0.7,
+    transform: [{ scale: 0.96 }],
+    opacity: 0.85,
   },
   buttonText: {
     color: '#fff',
     fontSize: 18,
-    fontWeight: '600',
-    letterSpacing: 0.5,
-  },
-  infoText: {
-    color: '#37474F',
-    fontSize: 16,
-    marginTop: 16,
-    textAlign: 'center',
+    fontWeight: '700',
   },
 });

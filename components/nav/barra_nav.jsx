@@ -5,12 +5,12 @@ import {
   Modal,
   TouchableWithoutFeedback,
   TouchableHighlight,
-  SafeAreaView,
   TouchableOpacity,
   Text,
   Animated,
   Easing,
 } from "react-native";
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Appbar, Avatar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import logoroyal from "../../assets/logoroyal.png";
@@ -192,7 +192,7 @@ export default function BarraNav({ activeItemKey = "first" }) {
       </Modal>
 
       {/* Barra superior */}
-      <Appbar.Header style={styles.appbar}>
+      <Appbar.Header style={styles.appbar }>
         <View style={{ flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
           <Appbar.Action
             icon={drawerVisible ? "menu-open" : "menu"}
@@ -213,11 +213,18 @@ export default function BarraNav({ activeItemKey = "first" }) {
             <Image source={logoroyal} style={styles.logoBar} resizeMode="contain" />
           </View>
           <TouchableOpacity onPress={() => setBottomDrawerVisible(true)}>
-            <Avatar.Text size={40} label={iniciales_nombre} style={{ marginRight: 9 }} />
+            <Avatar.Text
+              size={40}
+              label={iniciales_nombre}
+              color="#fff" // texto blanco
+              style={{ marginRight: 9, backgroundColor: "#004989" }} // fondo azul
+            />
           </TouchableOpacity>
         </View>
       </Appbar.Header>
-
+      <View style={{ paddingTop: 70 }}>
+        {/* Aquí va el resto del contenido de la pantalla */}
+      </View>
       {/* Drawer inferior */}
       <Modal
         visible={internalVisible}
@@ -255,11 +262,13 @@ export default function BarraNav({ activeItemKey = "first" }) {
           <Avatar.Text
             size={150}
             label={iniciales_nombre}
+            color="#fff" // texto blanco
             style={{
               position: "absolute",
               top: -75,
               alignSelf: "center",
               zIndex: 10,
+              backgroundColor: "#004989", // fondo azul
             }}
           />
           <View style={{ height: 75 }} />

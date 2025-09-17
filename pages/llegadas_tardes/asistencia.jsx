@@ -4,9 +4,9 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
   ScrollView
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { IconButton, DataTable } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';

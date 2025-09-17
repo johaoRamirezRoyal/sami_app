@@ -4,10 +4,10 @@ import {
   AppState,
   Linking,
   Platform,
-  SafeAreaView,
   StatusBar,
   StyleSheet,
 } from "react-native";
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Overlay } from "./Overlay";
 import { useEffect, useRef } from "react";
 

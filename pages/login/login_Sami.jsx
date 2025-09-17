@@ -17,7 +17,7 @@ import { styles } from "../../styles/login/logiStyle";
 import fondo from '../../assets/fondo.jpg';
 import logo from '../../assets/logo.jpg';
 import { guardarSesion, obtenerSesion, login } from "../../components/sesion/sesion";
-
+import { BASE_URL } from "../../components/api/urlApi";
 export default function Login_s ({ navigation }) {
   // Estados
   const [username, setUsername] = useState("");
@@ -27,6 +27,7 @@ export default function Login_s ({ navigation }) {
   const [passFocus, setPassFocus] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  
 
   // Maneja el login
   const handleLogin = () => {
@@ -41,7 +42,7 @@ export default function Login_s ({ navigation }) {
     }
     setLoading(true);
 
-    const URL = "http://192.168.0.105:3000/api/usuarios/login";
+    const URL = `${BASE_URL}/usuarios/login`;
     fetch(URL, {
       method: 'POST',
       headers: {

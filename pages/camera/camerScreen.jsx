@@ -3,7 +3,6 @@ import {
   View, 
   Text, 
   StyleSheet, 
-  SafeAreaView, 
   Pressable, 
   AppState, 
   Linking, 
@@ -12,6 +11,7 @@ import {
   Dimensions,
   Animated 
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useCameraPermissions, CameraView } from 'expo-camera';
 import { Canvas, DiffRect, rect, rrect } from "@shopify/react-native-skia";
 import { Ionicons } from '@expo/vector-icons';
@@ -34,11 +34,88 @@ const inner = rrect(
   50
 );
 
-const Overlay = () => (
-  <Canvas style={Platform.OS === "android" ? { flex: 1 } : StyleSheet.absoluteFillObject}>
-    <DiffRect inner={inner} outer={outer} color="black" opacity={0.5} />
-  </Canvas>
-);
+// Overlay con animación de pulso + láser de escaneo
+const AnimatedOverlay = () => {
+  const pulseAnim = useRef(new Animated.Value(0)).current;
+  const laserAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    // Pulso del borde
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulseAnim, {
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+
+    // Movimiento del láser
+    Animated.loop(
+      Animated.timing(laserAnim, {
+        toValue: innerDimension,
+        duration: 1500,
+        useNativeDriver: true,
+      })
+    ).start();
+  }, []);
+
+  const scale = pulseAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [1, 1.05],
+  });
+
+  const borderOpacity = pulseAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.7, 1],
+  });
+
+  // Cambia 'top' por 'transform: [{ translateY: laserAnim }]'
+  return (
+    <View style={StyleSheet.absoluteFill}>
+      {/* Fondo difuminado */}
+      <Canvas style={StyleSheet.absoluteFill}>
+        <DiffRect inner={inner} outer={outer} color="black" opacity={0.5} />
+      </Canvas>
+
+      {/* Recuadro central animado */}
+      <Animated.View
+        style={{
+          position: 'absolute',
+          top: height / 2 - innerDimension / 2,
+          left: width / 2 - innerDimension / 2,
+          width: innerDimension,
+          height: innerDimension,
+          borderRadius: 50,
+          borderWidth: 4,
+          borderColor: '#0173d6ff',
+          opacity: borderOpacity,
+          transform: [{ scale }],
+          overflow: 'hidden',
+        }}
+      >
+        {/* Láser de escaneo */}
+        <Animated.View
+          style={{
+            position: 'absolute',
+            left: 0,
+            width: '100%',
+            height: 3,
+            backgroundColor: '#ffffffff',
+            opacity: 0.8,
+            transform: [{ translateY: laserAnim }],
+          }}
+        />
+      </Animated.View>
+    </View>
+  );
+};
 
 export default function CameraScreen() {
   const [permission, requestPermission] = useCameraPermissions();
@@ -78,7 +155,12 @@ export default function CameraScreen() {
     <LinearGradient colors={['#004989', '#7C4DFF']} style={styles.gradient}>
       <SafeAreaView style={styles.container}>
         {!isPermissionGranted && (
-          <Animated.View style={[styles.card, { opacity: fadeAnim, transform: [{ translateY: fadeAnim.interpolate({ inputRange: [0, 1], outputRange: [20, 0] }) }] }]}>
+          <Animated.View style={[styles.card, { 
+            opacity: fadeAnim, 
+            transform: [{ 
+              translateY: fadeAnim.interpolate({ inputRange: [0, 1], outputRange: [20, 0] }) 
+            }] 
+          }]}>
             <Ionicons name="camera-outline" size={72} color="#004989" style={{ marginBottom: 16 }} />
             <Text style={styles.cardTitle}>Activa tu Cámara</Text>
             <Text style={styles.cardSubtitle}>
@@ -161,7 +243,7 @@ export default function CameraScreen() {
                 }
               }}
             />
-            <Overlay />
+            <AnimatedOverlay />
           </View>
         )}
 

@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet, SafeAreaView, Pressable } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link, Stack } from "expo-router";
 
 import { useCameraPermissions } from "expo-camera";

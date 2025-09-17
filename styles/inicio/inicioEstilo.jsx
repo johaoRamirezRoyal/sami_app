@@ -63,6 +63,12 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 6,
     zIndex: 10,
+    height: 70,
+    marginTop: 0, // ← asegúrate que no tenga margen superior
+    top: 0,       // ← posición absoluta arriba
+    position: 'absolute', // ← posición absoluta
+    left: 0,
+    right: 0,
   },
   // Logo pequeño para la barra
   logoBar: {

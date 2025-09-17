@@ -1,8 +1,8 @@
 // 1. Importaciones principales
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, SafeAreaView, Modal, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, TouchableWithoutFeedback } from 'react-native';
 import { getFocusedRouteNameFromRoute, useNavigation } from '@react-navigation/native';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 // 2. Recursos locales (imágenes y estilos)
 import logocomplet from '../../assets/logocomplet.png';
 import { styles } from '../../styles/inicio/inicioEstilo';

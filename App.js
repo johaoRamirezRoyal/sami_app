@@ -12,7 +12,8 @@ import CamerScreen from './pages/camera/camerScreen';
 import Reserve from './pages/reserve/reserve';
 import inventario from './pages/lis.Inventario/lis.Inventario';
 import SplashScreen from './pages/login/cargalogin';
-
+import PerfilScreen from './pages/perfil/perfil'; // Importa tu pantalla de perfil aquí
+import BarraNav from './components/nav/barra_nav';
 
 const Stack = createNativeStackNavigator();
 
@@ -81,6 +82,11 @@ export default function App() {
         <Stack.Screen 
           name="inventario" 
           component={inventario} 
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name="perfil" 
+          component={PerfilScreen} 
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

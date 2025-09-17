@@ -67,36 +67,45 @@ export default function PerfilScreen() {
 
         {/* Tarjeta de información animada */}
         <Animatable.View animation="fadeInUp" delay={500} style={styles.card}>
-          <View style={styles.item}>
-            <MaterialCommunityIcons name="account" size={24} color="#004989" />
-            <Text style={styles.itemLabel}>Nombre:</Text>
-            <Text style={styles.itemText}>{usuario.nombre}</Text>
-          </View>
-          <View style={styles.item}>
-            <MaterialCommunityIcons name="account-outline" size={24} color="#004989" />
-            <Text style={styles.itemLabel}>Apellido:</Text>
-            <Text style={styles.itemText}>{usuario.apellido}</Text>
-          </View>
-          <View style={styles.item}>
-            <MaterialCommunityIcons name="email" size={24} color="#004989" />
-            <Text style={styles.itemLabel}>Correo:</Text>
-            <Text style={styles.itemText}>{usuario.email}</Text>
-          </View>
-          <View style={styles.item}>
-            <MaterialCommunityIcons name="phone" size={24} color="#004989" />
-            <Text style={styles.itemLabel}>Teléfono:</Text>
-            <Text style={styles.itemText}>{usuario.telefono}</Text>
-          </View>
-          <View style={styles.item}>
-            <MaterialCommunityIcons name="card-account-details" size={24} color="#004989" />
-            <Text style={styles.itemLabel}>Documento:</Text>
-            <Text style={styles.itemText}>{usuario.documento}</Text>
-          </View>
-          <View style={styles.item}>
-            <MaterialCommunityIcons name="star" size={24} color="#004989" />
-            <Text style={styles.itemLabel}>Nivel:</Text>
-            <Text style={styles.itemText}>{usuario.nivel}</Text>
-          </View>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            <View style={{ flexDirection: 'column' }}>
+              <View style={styles.item}>
+                <MaterialCommunityIcons name="account" size={24} color="#004989" />
+                <View style={styles.textContainer}>
+                  <Text style={styles.itemLabel}>Nombre:</Text>
+                  <Text style={styles.itemText}>{usuario.nombre}</Text>
+                </View>
+              </View>
+              <View style={styles.item}>
+                <MaterialCommunityIcons name="account-outline" size={24} color="#004989" />
+                <View style={styles.textContainer}>
+                  <Text style={styles.itemLabel}>Apellido:</Text>
+                  <Text style={styles.itemText}>{usuario.apellido}</Text>
+                </View>
+              </View>
+              <View style={styles.item}>
+                <MaterialCommunityIcons name="email" size={24} color="#004989" />
+                <View style={styles.textContainer}>
+                  <Text style={styles.itemLabel}>Correo:</Text>
+                  <Text style={styles.itemText}>{usuario.correo}</Text>
+                </View>
+              </View>
+              <View style={styles.item}>
+                <MaterialCommunityIcons name="card-account-details" size={24} color="#004989" />
+                <View style={styles.textContainer}>
+                  <Text style={styles.itemLabel}>Documento:</Text>
+                  <Text style={styles.itemText}>{usuario.documento}</Text>
+                </View>
+              </View>
+              <View style={styles.item}>
+                <MaterialCommunityIcons name="star" size={24} color="#004989" />
+                <View style={styles.textContainer}>
+                  <Text style={styles.itemLabel}>Nivel:</Text>
+                  <Text style={styles.itemText}>{usuario.nom_nivel}</Text>
+                </View>
+              </View>
+            </View>
+          </ScrollView>
         </Animatable.View>
       </ScrollView>
     </SafeAreaView>

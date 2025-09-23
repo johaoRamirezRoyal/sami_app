@@ -1,5 +1,5 @@
 // 1. Importaciones principales
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -13,19 +13,14 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Animatable from 'react-native-animatable';
 import BarraNav from '../../components/nav/barra_nav';
-import { obtenerSesion } from '../../components/sesion/sesion';
 import { styles } from '../../styles/perfil/perfilEstilo';
+import { useSesion } from '../../hookes/useSesion';
 
 export default function PerfilScreen() {
-  const [sesion, setSesion] = useState(null);
+      // Usar el nuevo hook useSesion
+  const sesion = useSesion();
 
-  useEffect(() => {
-    const cargarSesion = async () => {
-      const datosSesion = await obtenerSesion();
-      setSesion(datosSesion);
-    };
-    cargarSesion();
-  }, []);
+
 
   if (!sesion) {
     return (

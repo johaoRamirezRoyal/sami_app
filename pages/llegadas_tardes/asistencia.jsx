@@ -9,45 +9,64 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { IconButton, DataTable } from 'react-native-paper';
+import { ActivityIndicator } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
 import { styles } from '../../styles/inicio/inicioEstilo';
-import { obtenerSesion } from '../../components/sesion/sesion';
-import { BASE_URL } from '../../components/api/urlApi';
 import BarraNav from '../../components/nav/barra_nav';
+import { usePermiso } from '../../hookes/usePermiso';
+import { useSesion } from '../../hookes/useSesion';
+import { useAsistencias } from '../../hookes/useAsistencias';
+
 
 export default function Inicio() {
-  const [sesion, setSesion] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  const sesion = useSesion();
+
+  useEffect(() => {
+    let timer;
+    if (!sesion || !sesion.usuario) {
+      setLoading(true);
+      timer = setTimeout(() => {
+        setLoading(false);
+        setError(true);
+      }, 8000); // 8 segundos
+    } else {
+      setLoading(false);
+      setError(false);
+    }
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [sesion]);
   const navigation = useNavigation();
+  // Obtener el idPerfil y usar el hook de permiso
+  const perfil_id = sesion?.usuario?.perfil ? Number(sesion.usuario.perfil) : null;
+  const opcion_permiso = 2;
+  const hasPermission = usePermiso(opcion_permiso, perfil_id);
+  // Usar el hook useAsistencias para obtener las asistencias
+  const asistencias = useAsistencias(sesion, perfil_id);
 
-  const [asistencias, setAsistencias] = useState([]);
-
-  useEffect(() => {
-    const cargarSesion = async () => {
-      const datosSesion = await obtenerSesion();
-      setSesion(datosSesion);
-    };
-    cargarSesion();
-  }, []);
-
-  useEffect(() => {
-    const fetchAsistencias = async () => {
-      try {
-        const response = await fetch(`${BASE_URL}/asistencias_estudiantes/asistenciasDiaHoy`);
-        const data = await response.json();
-        setAsistencias(data);
-      } catch (error) {
-        console.error('Error al obtener asistencias:', error);
-      }
-    };
-    fetchAsistencias();
-  }, []);
-
-  if (!sesion || !sesion.usuario) {
+  if (loading) {
     return (
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.container}>
+          <ActivityIndicator size="large" color="#004989" style={{ marginBottom: 20 }} />
           <Text style={styles.title}>Cargando sesión...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (error) {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.container}>
+          <Text style={{ color: 'red', marginTop: 20, fontWeight: 'bold' }}>
+            Error: La sesión está tardando demasiado en cargar. Por favor, verifica tu conexión o intenta nuevamente.
+          </Text>
         </View>
       </SafeAreaView>
     );

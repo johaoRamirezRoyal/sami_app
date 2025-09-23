@@ -9,23 +9,17 @@ import { Appbar, IconButton, Drawer } from 'react-native-paper';
 import logo from '../../assets/logo.jpg';
 import logocomplet from '../../assets/logocomplet.png';
 import { styles } from '../../styles/inicio/inicioEstilo';
-import { obtenerSesion } from '../../components/sesion/sesion';
 import BarraNav from '../../components/nav/barra_nav'; // <--- Agrega esta línea
+import { useSesion } from '../../hookes/useSesion';
 
 // 3. Componente principal de la pantalla de inicio
 export default function Inicio() {
   // --- Estados locales ---
-  const [sesion, setSesion] = useState(null); // Estado de la sesión de usuario
+  // Usar el nuevo hook useSesion
+  const sesion = useSesion();
   const navigation = useNavigation();
 
-  // --- Efecto para cargar la sesión al montar el componente ---
-  useEffect(() => {
-    const cargarSesion = async () => {
-      const datosSesion = await obtenerSesion();
-      setSesion(datosSesion);
-    };
-    cargarSesion();
-  }, []);
+
 
   // --- Mostrar pantalla de carga si no hay sesión ---
   if (!sesion) {

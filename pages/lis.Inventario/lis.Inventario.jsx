@@ -1,46 +1,54 @@
-// 1. Importaciones principales
+// ==============================
+// 1. IMPORTACIONES PRINCIPALES
+// ==============================
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, TouchableWithoutFeedback, TextInput, FlatList } from 'react-native';
-import { DataTable } from 'react-native-paper';
-import { IconButton } from 'react-native-paper';
-import { ScrollView } from 'react-native';
-import { getFocusedRouteNameFromRoute, useNavigation } from '@react-navigation/native';
-import { ActivityIndicator } from 'react-native-paper';
+import { View, Text, TextInput, ScrollView, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView, Platform } from 'react-native';
+import { DataTable, IconButton, Portal, Dialog } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
-// 2. Recursos locales (imágenes y estilos)
+import { useNavigation } from '@react-navigation/native';
 import { styles } from '../../styles/inicio/inicioEstilo';
+import { stylesLis } from '../../styles/lis.inventario/styleslis';
 
-import BarraNav from '../../components/nav/barra_nav'; // <--- Agrega esta línea
+import BarraNav from '../../components/nav/barra_nav';
 import { useSesion } from '../../hookes/useSesion';
-
 import { BASE_URL } from '../../components/api/urlApi';
 
-// 3. Componente principal de la pantalla de inicio
+// ==============================
+// 2. COMPONENTE PRINCIPAL
+// ==============================
 export default function Inicio() {
-  // --- Estados locales ---
+  // ------------------------------
+  // 2.1. ESTADOS PARA MODAL REPORTE
+  // ------------------------------
+  const [modalVisible, setModalVisible] = useState(false);
+  const [reportItem, setReportItem] = useState(null);
+  const [reportText, setReportText] = useState('');
+  const [reportLoading, setReportLoading] = useState(false);
+
+  // ------------------------------
+  // 2.2. ESTADOS DE SESIÓN Y NAVEGACIÓN
+  // ------------------------------
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const sesion = useSesion();
   const navigation = useNavigation();
 
-  // --- Estados para inventario ---
-  const [search, setSearch] = useState('');
+  // ------------------------------
+  // 2.3. ESTADOS DE INVENTARIO Y PAGINACIÓN
+  // ------------------------------
   const [inventory, setInventory] = useState([]);
-  const [page, setPage] = useState(0);
+  const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1); // Backend usa 1-index
   const [limit, setLimit] = useState(5);
   const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loadingInventory, setLoadingInventory] = useState(false);
 
-  // Handler para cambiar el límite desde un input
-  const handleLimitChange = (text) => {
-    // Solo permitir números entre 1 y 100
-    let value = parseInt(text.replace(/[^0-9]/g, ''));
-    if (isNaN(value) || value < 1) value = 1;
-    if (value > 100) value = 100;
-    setLimit(value);
-    setPage(0); // Reiniciar a la primera página
-  };
+  // ==============================
+  // 3. EFECTOS Y FUNCIONES
+  // ==============================
 
-  // --- Efecto para manejar la carga de la sesión ---
+  // 3.1. Validar sesión del usuario
   useEffect(() => {
     let timer;
     if (!sesion || !sesion.usuario) {
@@ -48,56 +56,54 @@ export default function Inicio() {
       timer = setTimeout(() => {
         setLoading(false);
         setError(true);
-      }, 8000); // 8 segundos
+      }, 8000);
     } else {
       setLoading(false);
       setError(false);
     }
-    return () => {
-      if (timer) clearTimeout(timer);
-    };
+    return () => timer && clearTimeout(timer);
   }, [sesion]);
 
-  // --- Extraer datos del usuario de la sesión ---
-  let userSession;
-  if (sesion && sesion.usuario) {
-    userSession = sesion.usuario;
-  }
-  console.log('Sesión del usuario:', userSession);
+  const userSession = sesion?.usuario;
 
-  // Filtrar inventario por búsqueda
-  const filteredInventory = inventory.filter(item =>
-    item.descripcion && item.descripcion.toLowerCase().includes(search.toLowerCase())
-  );
+  // 3.2. Filtrar inventario localmente (solo si hay búsqueda)
+  const filteredInventory = search.trim() === ''
+    ? inventory
+    : inventory.filter(item => (item.descripcion ?? '').toLowerCase().includes(search.toLowerCase()));
 
-  // Calcular el total de elementos filtrados
-  const filteredTotal = filteredInventory.length;
+  // 3.3. El backend ya envía los datos paginados, así que no se debe paginar dos veces
+  const paginatedInventory = filteredInventory;
 
-  // Obtener los elementos de la página actual
-  const paginatedInventory = filteredInventory.slice(page * limit, (page + 1) * limit);
+  // 3.4. Obtener inventario desde el backend
+  useEffect(() => {
+    if (loading || !userSession) return;
 
-useEffect(() => {
-  fetch(`${BASE_URL}/inventario/${userSession?.id_log}?page=${page + 1}&limit=${limit}`)
-    .then(response => response.json())
-    .then(data => {
-      // Si data ya es un array, no hay paginación implementada
-      if (Array.isArray(data)) {
-        console.warn('El backend no está paginando, se recibieron', data.length, 'items');
-        setInventory(data);
-        setTotal(data.length);
-      } else {
-        setInventory(Array.isArray(data.items) ? data.items : []);
+    setLoadingInventory(true);
+    fetch(`${BASE_URL}/inventario/usuario/11?page=${page}&limit=${limit}`)
+      .then(response => response.json())
+      .then((data) => {
+        setInventory(Array.isArray(data.data) ? data.data : []);
         setTotal(data.total || 0);
-      }
-    })
-    .catch(error => {
-      console.error('Error al obtener inventario:', error);
-    });
-}, [page, limit]);
+        setTotalPages(data.totalPage || 1);
+      })
+      .catch(error => {
+        alert('Error al obtener inventario: ' + error.message);
+      })
+      .finally(() => setLoadingInventory(false));
+  }, [page, limit, userSession, loading]);
 
+  // 3.5. Cambiar límite de artículos por página
+  const handleLimitChange = (text) => {
+    let value = parseInt(text.replace(/[^0-9]/g, ''));
+    if (isNaN(value) || value < 1) value = 1;
+    if (value > 100) value = 100;
+    setLimit(value);
+    setPage(1); // Reinicia a la primera página
+  };
 
-
-  // --- Mostrar pantalla de carga o error si no hay sesión ---
+  // ==============================
+  // 4. RENDER DE PANTALLAS DE CARGA Y ERROR
+  // ==============================
   if (loading) {
     return (
       <SafeAreaView style={styles.safeArea}>
@@ -121,101 +127,223 @@ useEffect(() => {
     );
   }
 
-
-
-  // --- Renderizado principal ---
+  // ==============================
+  // 5. RENDER PRINCIPAL
+  // ==============================
   return (
     <SafeAreaView style={styles.safeArea}>
-      <BarraNav/>{/* Barra de navegación personalizada */}
-      
+      {/* Barra de navegación */}
+      <BarraNav />
 
-      {/* Contenido principal  */}
       <View style={styles.container}>
-        {/* Inventario */}
-        <Text style={{ fontSize: 22, fontWeight: 'bold', marginBottom: 4, color: '#004989', textAlign: 'left', letterSpacing: 1, alignSelf: 'flex-start' }}>Inventario</Text>
-        <View style={{ height: 2, backgroundColor: '#b0b0b0', marginBottom: 12, borderRadius: 2, opacity: 0.7, width: '100%' }} />
+        {/* Modal para reportar artículo */}
+        <Portal>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={{ flex: 1, justifyContent: 'center' }}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 1 : 0}
+          >
+            <Dialog visible={modalVisible} onDismiss={() => setModalVisible(false)} style={{ backgroundColor: '#ffffff', borderRadius: 12 }}>
+              <Dialog.Title>Reportar artículo</Dialog.Title>
+              <Dialog.Content style={{ backgroundColor: '#ffffff', borderRadius: 12 }}>
+                <Text style={{ marginBottom: 8 }}>
+                  {reportItem ? `Artículo: ${reportItem.descripcion}` : ''}
+                </Text>
+                <TextInput
+                  placeholder="Describe el problema..."
+                  value={reportText}
+                  onChangeText={setReportText}
+                  multiline
+                  style={stylesLis.modalInput}
+                />
+              </Dialog.Content>
+              <Dialog.Actions style={{ backgroundColor: '#ffffff', borderRadius: 12 }}>
+                <TouchableOpacity
+                  onPress={() => setModalVisible(false)}
+                  style={stylesLis.cancelBtn}
+                >
+                  <Text style={{ color: '#004989', fontWeight: 'bold' }}>Cancelar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={async () => {
+                    if (!reportText.trim()) return;
+                    setReportLoading(true);
+                    try {
+                      const res = await fetch(`${BASE_URL}/inventario/reportar`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          id_inventario: reportItem.id,
+                          observacion: reportText,
+                          estado: 2,
+                          id_area: reportItem.id_area,
+                          id_user: reportItem?.id_user
+                        })
+                      });
+                      if (!res.ok) throw new Error('Error al enviar reporte');
+                      setModalVisible(false);
+                      setReportText('');
+                      setReportItem(null);
+                      alert('Reporte enviado correctamente');
+                    } catch (e) {
+                      alert('No se pudo enviar el reporte');
+                    } finally {
+                      setReportLoading(false);
+                    }
+                  }}
+                  disabled={reportLoading || !reportText.trim()}
+                  style={[
+                    stylesLis.sendBtn,
+                    { backgroundColor: reportLoading || !reportText.trim() ? '#ccc' : '#004989' }
+                  ]}
+                >
+                  <Text style={{ color: '#fff', fontWeight: 'bold' }}>{reportLoading ? 'Enviando...' : 'Enviar'}</Text>
+                </TouchableOpacity>
+              </Dialog.Actions>
+            </Dialog>
+          </KeyboardAvoidingView>
+        </Portal>
 
+        {/* Título y separador */}
+        <Text style={stylesLis.title}>Inventario</Text>
+        <View style={stylesLis.separator} />
 
-
-        <View style={{ flexDirection: 'row', alignItems: 'center', borderColor: '#ccc', borderWidth: 1, borderRadius: 8, paddingHorizontal: 10, marginBottom: 12, backgroundColor: '#fff' }}>
+        {/* Buscador */}
+        <View style={stylesLis.searchContainer}>
           <TextInput
             placeholder="Buscar artículo"
-            style={{ flex: 1, height: 40 }}
+            style={stylesLis.searchInput}
             value={search}
             onChangeText={setSearch}
           />
-          <IconButton
-            icon="magnify"
-            size={28}
-            color="#004989"
-            onPress={() => {}}
-            style={{ marginLeft: 8 }}
-          />
+          <IconButton icon="magnify" size={28} color="#004989" />
         </View>
 
-        <ScrollView horizontal showsHorizontalScrollIndicator={true}>
-          <View>
-            <DataTable>
-              <DataTable.Header>
-                <DataTable.Title style={{ minWidth: 200 }}>ÁREA</DataTable.Title>
-                <DataTable.Title style={{ minWidth: 360 }}>DESCRIPCIÓN</DataTable.Title>
-                <DataTable.Title style={{ minWidth: 100 }}>MARCA</DataTable.Title>
-                <DataTable.Title style={{ minWidth: 100 }}>CANTIDAD</DataTable.Title>
-                <DataTable.Title style={{ minWidth: 100 }}>ESTADO</DataTable.Title>
-                <DataTable.Title style={{ minWidth: 100 }}>OPCIÓN</DataTable.Title>
-              </DataTable.Header>
-            </DataTable>
-            <ScrollView style={{ maxHeight: 300 }} showsVerticalScrollIndicator={true}>
+        {/* Tabla de inventario */}
+        {loadingInventory ? (
+          <ActivityIndicator size="large" color="#004989" style={{ marginVertical: 20 }} />
+        ) : (
+          <ScrollView horizontal showsHorizontalScrollIndicator={true}>
+            <View>
+              {/* Encabezado de la tabla */}
               <DataTable>
-                {paginatedInventory.map((item, idx) => (
-                  <DataTable.Row key={item.id}>
-                    <DataTable.Cell style={{ minWidth: 200 }}>{item.area}</DataTable.Cell>
-                    <DataTable.Cell style={{ minWidth: 360 }}>{item.descripcion}</DataTable.Cell>
-                    <DataTable.Cell style={{ minWidth: 100 }}>{item.marca}</DataTable.Cell>
-                    <DataTable.Cell style={{ minWidth: 100 }}>{item.cantidad}</DataTable.Cell>
-                    <DataTable.Cell style={{ minWidth: 100 }}>{item.estado}</DataTable.Cell>
-                    <DataTable.Cell style={{ minWidth: 100 }}>
-                      <TouchableOpacity>
-                        <Text style={{ color: '#007BFF', fontSize: 12 }}>Editar</Text>
-                      </TouchableOpacity>
-                    </DataTable.Cell>
-                  </DataTable.Row>
-                ))}
+                <DataTable.Header>
+                  <DataTable.Title style={stylesLis.tableHeaderCell}>
+                    <Text style={{ textAlign: 'center', width: '100%' }}>ÁREA</Text>
+                  </DataTable.Title>
+                  <DataTable.Title style={stylesLis.tableHeaderCellDesc}>
+                    <Text style={{ textAlign: 'center', width: '100%' }}>DESCRIPCIÓN</Text>
+                  </DataTable.Title>
+                  <DataTable.Title style={stylesLis.tableHeaderCellMarca}>
+                    <Text style={{ textAlign: 'center', width: '100%' }}>MARCA</Text>
+                  </DataTable.Title>
+                  <DataTable.Title style={stylesLis.tableHeaderCellCantidad}>
+                    <Text style={{ textAlign: 'center', width: '100%' }}>CANTIDAD</Text>
+                  </DataTable.Title>
+                  <DataTable.Title style={stylesLis.tableHeaderCellEstado}>
+                    <Text style={{ textAlign: 'center', width: '100%' }}>ESTADO</Text>
+                  </DataTable.Title>
+                  <DataTable.Title style={stylesLis.tableHeaderCellOpcion}>
+                    <Text style={{ textAlign: 'center', width: '100%' }}>OPCIÓN</Text>
+                  </DataTable.Title>
+                </DataTable.Header>
               </DataTable>
-            </ScrollView>
-            
-          </View>
-        </ScrollView>
-        <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 12, marginBottom: 0, width: '100%' }}>
-          <View style={{ width: 300, maxWidth: '100%' }}>
+              {/* Filas de la tabla */}
+              <ScrollView style={{ maxHeight: 300 }} showsVerticalScrollIndicator={true}>
+                <DataTable>
+                  {paginatedInventory.length > 0 ? (
+                    paginatedInventory.map((item) => (
+                      <DataTable.Row key={item.id}>
+                        <DataTable.Cell style={stylesLis.tableHeaderCell}>
+                          <Text style={{ textAlign: 'center' }}>{item.area}</Text>
+                        </DataTable.Cell>
+                        <DataTable.Cell style={stylesLis.tableHeaderCellDesc}>
+                          <Text style={{ textAlign: 'center' }}>{item.descripcion}</Text>
+                        </DataTable.Cell>
+                        <DataTable.Cell style={stylesLis.tableHeaderCellMarca}>
+                          <Text style={{ textAlign: 'center' }}>{item.marca}</Text>
+                        </DataTable.Cell>
+                        <DataTable.Cell style={stylesLis.tableHeaderCellCantidad}>
+                          <Text style={{ textAlign: 'center' }}>{item.cantidad}</Text>
+                        </DataTable.Cell>
+                        <DataTable.Cell style={stylesLis.tableHeaderCellEstado}>
+                          <View
+                            style={[
+                              stylesLis.estadoBox,
+                              {
+                                backgroundColor:
+                                  item.nombre_estado === 'Mantenimiento Correctivo'
+                                    ? '#e53935'
+                                    : item.nombre_estado === 'Asignado'
+                                    ? '#43a047'
+                                    : item.nombre_estado === 'Arreglado'
+                                    ? '#1e88e5'
+                                    : '#7c7c7cff',
+                              },
+                            ]}
+                          >
+                            <Text style={{ color: '#fff', fontWeight: 'bold', textAlign: 'center' }}>
+                              {item.nombre_estado}
+                            </Text>
+                          </View>
+                        </DataTable.Cell>
+                        <DataTable.Cell style={stylesLis.tableHeaderCellOpcion}>
+                          <TouchableOpacity
+                            onPress={() => {
+                              setReportItem(item);
+                              setModalVisible(true);
+                            }}
+                            style={stylesLis.reportBtn}
+                          >
+                            <Text style={stylesLis.reportBtnText}>reportar</Text>
+                          </TouchableOpacity>
+                        </DataTable.Cell>
+                      </DataTable.Row>
+                    ))
+                  ) : (
+                    <DataTable.Row>
+                      <DataTable.Cell style={{ minWidth: 200 }}>
+                        <Text style={{ color: '#888', fontSize: 14 }}>No hay artículos en esta página</Text>
+                      </DataTable.Cell>
+                    </DataTable.Row>
+                  )}
+                </DataTable>
+              </ScrollView>
+            </View>
+          </ScrollView>
+        )}
+
+        {/* Paginación */}
+        <View style={stylesLis.paginationContainer}>
+          <View style={stylesLis.paginationInner}>
             <DataTable.Pagination
-              page={page}
-              numberOfPages={Math.max(1, Math.ceil(filteredTotal / limit))}
-              onPageChange={(newPage) => {
-                if (filteredTotal > 0 && newPage >= 0 && newPage < Math.ceil(filteredTotal / limit)) setPage(newPage);
-              }}
+              page={page - 1} // DataTable usa 0-index, backend 1-index
+              numberOfPages={totalPages}
+              onPageChange={(newPage) => setPage(newPage + 1)}
               label={
-                filteredTotal > 0
-                  ? `Página ${page + 1} de ${Math.max(1, Math.ceil(filteredTotal / limit))} | Mostrando ${filteredTotal === 0 ? 0 : page * limit + 1}-${Math.min((page + 1) * limit, filteredTotal)} de ${filteredTotal} artículo${filteredTotal === 1 ? '' : 's'}`
+                total > 0
+                  ? `Página ${page} de ${totalPages} | Mostrando ${(page - 1) * limit + 1}-${Math.min(page * limit, total)} de ${total} artículo${total === 1 ? '' : 's'}`
                   : 'Sin artículos para mostrar'
               }
               optionsPerPage={[]}
               itemsPerPage={limit}
               onItemsPerPageChange={() => {}}
-              showFastPaginationControls={filteredTotal > limit}
+              showFastPaginationControls={total > limit}
               selectPageDropdownLabel={''}
-              disabled={filteredTotal === 0}
+              disabled={total === 0}
               style={{ minWidth: 220 }}
               labelStyle={{ flexWrap: 'nowrap', textAlign: 'center', fontSize: 14, color: '#222' }}
             />
           </View>
         </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 4, marginBottom: 8, width: '100%' }}>
+
+        {/* Selector de límite de artículos por página */}
+        <View style={stylesLis.limitInputContainer}>
           <TextInput
-            value={limit.toString()}
             onChangeText={handleLimitChange}
+            value={String(limit)}
             keyboardType="numeric"
-            style={{ borderWidth: 1, borderColor: '#b0b0b0', borderRadius: 6, width: 38, height: 28, textAlign: 'center', backgroundColor: '#fff', fontSize: 14, paddingVertical: 0, paddingHorizontal: 2 }}
+            style={stylesLis.limitInput}
             maxLength={2}
             placeholder="5"
             returnKeyType="done"
@@ -226,4 +354,3 @@ useEffect(() => {
     </SafeAreaView>
   );
 }
-

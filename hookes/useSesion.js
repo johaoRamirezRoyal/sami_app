@@ -12,6 +12,7 @@ export function useSesion(perfilId = null) {
   useEffect(() => {
     const cargarSesion = async () => {
       const datosSesion = await obtenerSesion();
+      //console.log('datosSesion:', datosSesion); // <-- Agrega este log
       setSesion(datosSesion);
       // Si necesitas usar perfilId para lógica adicional, agrégala aquí
     };

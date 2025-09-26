@@ -12,16 +12,16 @@ La estructura del proyecto promueve la reutilización de componentes, la separac
 
 ---
 
-## Funcionalidades Principales
+## Funcionalidades Principales  
 
-| Área                  | Funcionalidades Clave                                                                                           |
-|-----------------------|----------------------------------------------------------------------------------------------------------------|
-| Gestión Académica     | Matrícula, control de estudiantes, calificaciones, asistencia, egresados, áreas, dimensiones, periodos, cursos y salones. |
-| Gestión Administrativa| Inventario, mantenimiento, recursos, proveedores, contabilidad, prefactura, renovaciones, reportes, biblioteca, capacitaciones. |
-| Gestión de Usuarios   | Administración de usuarios, perfiles, permisos, padres/acudientes, vinculación, sesiones y autenticación.       |
-| Comunicación          | Envío de correos electrónicos, notificaciones internas, confirmaciones y alertas.                               |
-| Documentación         | Generación de carnets, certificados, firmas digitales, reportes en PDF/Excel, gestión documental.               |
-| Otros Módulos         | Admisiones, solicitudes, actividades extraescolares, ayuda, historial, configuraciones, zonas, firmas, etc.     |
+| Área                  | Funcionalidades Clave                                                                                                                                         |
+|-----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Gestión Académica** | Asistencia y llegadas tarde, control de cursos y salones, periodos, calificaciones, matrícula, egresados, áreas y dimensiones.                               |
+| **Gestión Administrativa** | Inventario institucional, reportes, reservas de salones, mantenimiento, recursos, proveedores, contabilidad, prefactura, renovaciones, biblioteca, capacitaciones. |
+| **Gestión de Usuarios** | Administración de perfiles y sesiones, autenticación, permisos, padres/acudientes, vinculación y control de acceso.                                         |
+| **Comunicación**      | Notificaciones internas, alertas, confirmaciones y envío de correos electrónicos.                                                                            |
+| **Documentación**     | Generación de reportes (PDF/Excel), carnets, certificados, firmas digitales y gestión documental.                                                             |
+| **Otros Módulos**     | Admisiones, solicitudes, actividades extraescolares, sección de ayuda/tutoriales, historial de uso, configuraciones generales, zonas, firmas, etc.           |
 
 Cada módulo está diseñado para cubrir procesos específicos, con formularios, reportes y flujos de trabajo adaptados a los distintos roles institucionales.
 

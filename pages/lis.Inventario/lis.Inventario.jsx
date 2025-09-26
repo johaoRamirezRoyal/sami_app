@@ -36,13 +36,16 @@ export default function Inicio() {
   // ------------------------------
   // 2.3. ESTADOS DE INVENTARIO Y PAGINACIÓN
   // ------------------------------
-  const [inventory, setInventory] = useState([]); // Lista de artículos del inventario
+  const [inventory, setInventory] = useState([]); // Inventario paginado (para mostrar en la tabla)
   const [search, setSearch] = useState('');       // Texto de búsqueda
+  const [showSuggestions, setShowSuggestions] = useState(false); // Controla visibilidad de sugerencias
   const [page, setPage] = useState(1);            // Página actual (1-index)
   const [limit, setLimit] = useState(5);          // Cantidad de artículos por página
   const [total, setTotal] = useState(0);          // Total de artículos
   const [totalPages, setTotalPages] = useState(1);// Total de páginas
   const [loadingInventory, setLoadingInventory] = useState(false); // Estado de carga del inventario
+  const [reload, setReload] = useState(false);    // Para forzar recarga del inventario
+  const [allInventory, setAllInventory] = useState([]); // Inventario completo (para búsqueda global)
 
   // ==============================
   // 3. EFECTOS Y FUNCIONES
@@ -65,22 +68,18 @@ export default function Inicio() {
   }, [sesion]);
 
   const userSession = sesion?.usuario;
+  if (userSession) {
+    console.log('userSession:', userSession);
+  }
 
-  // 3.2. Filtrar inventario localmente (solo si hay búsqueda)
-  // Si hay texto en el buscador, filtra los artículos por descripción
-  const filteredInventory = search.trim() === ''
-    ? inventory
-    : inventory.filter(item => (item.descripcion ?? '').toLowerCase().includes(search.toLowerCase()));
-
-  // 3.3. El backend ya envía los datos paginados, así que no se debe paginar dos veces
-  const paginatedInventory = filteredInventory;
-
-  // 3.4. Obtener inventario desde el backend
+  // 3.4. Obtener inventario desde el backend (paginado)
   useEffect(() => {
     if (loading || !userSession) return;
 
     setLoadingInventory(true);
-    fetch(`${BASE_URL}/inventario/usuario/11?page=${page}&limit=${limit}`)
+    const url = `${BASE_URL}/inventario/usuario/${userSession?.id_log}?page=${page}&limit=${limit}`;
+    console.log('Inventario fetch URL:', url); // <-- Agregado para debug
+    fetch(url)
       .then(response => response.json())
       .then((data) => {
         setInventory(Array.isArray(data.data) ? data.data : []);
@@ -91,7 +90,30 @@ export default function Inicio() {
         alert('Error al obtener inventario: ' + error.message);
       })
       .finally(() => setLoadingInventory(false));
-  }, [page, limit, userSession, loading]);
+  }, [page, limit, userSession, loading, reload]);
+
+  // 3.4.1. Obtener TODO el inventario para búsqueda global (solo una vez)
+  useEffect(() => {
+    if (!userSession) return;
+    fetch(`${BASE_URL}/inventario/usuario/${userSession?.id_log}}`)
+      .then(response => response.json())
+      .then((data) => {
+        setAllInventory(Array.isArray(data.data) ? data.data : []);
+      })
+      .catch(() => setAllInventory([]));
+  }, [userSession, reload]);
+
+  // 3.2. Filtrar inventario localmente (sobre todo el inventario si hay búsqueda)
+  // Si hay búsqueda, filtra sobre todo el inventario; si no, muestra la página actual
+  const filteredInventory = search.trim() === ''
+    ? inventory
+    : allInventory.filter(item => (item.descripcion ?? '').toLowerCase().includes(search.toLowerCase()));
+
+  // 3.3. La tabla muestra los resultados filtrados (paginados solo si no hay búsqueda)
+  // Si hay búsqueda, muestra solo los primeros "limit" resultados encontrados
+  const paginatedInventory = search.trim() === ''
+    ? inventory
+    : filteredInventory.slice(0, limit);
 
   // 3.5. Cambiar límite de artículos por página
   // Valida y ajusta el límite de artículos por página
@@ -189,7 +211,9 @@ export default function Inicio() {
                       setModalVisible(false);
                       setReportText('');
                       setReportItem(null);
+                      // El alert es síncrono en React Native, así que después de OK se ejecuta el siguiente código
                       alert('Reporte enviado correctamente');
+                      setReload(r => !r); // Forzar recarga del inventario después de enviar el reporte y cerrar el alert
                     } catch (e) {
                       alert('No se pudo enviar el reporte');
                     } finally {
@@ -219,10 +243,52 @@ export default function Inicio() {
             placeholder="Buscar artículo"
             style={stylesLis.searchInput}
             value={search}
-            onChangeText={setSearch}
+            onChangeText={text => {
+              setSearch(text);
+              setShowSuggestions(text.trim() !== '');
+            }}
+            autoCorrect={false}
+            autoCapitalize="none"
+            onBlur={() => setTimeout(() => setShowSuggestions(false), 150)} // Oculta sugerencias al perder foco
+            onFocus={() => setShowSuggestions(search.trim() !== '')}
           />
           <IconButton icon="magnify" size={28} color="#004989" />
         </View>
+        {/* Sugerencias de búsqueda */}
+        {showSuggestions && search.trim() !== '' && filteredInventory.length > 0 && (
+          <View style={{
+            backgroundColor: '#fff',
+            borderWidth: 1,
+            borderColor: '#ddd',
+            borderRadius: 8,
+            maxHeight: 150,
+            marginHorizontal: 16,
+            marginTop: -8,
+            zIndex: 10,
+            position: 'absolute',
+            top: 170, // Ajusta según tu layout
+            left: 0,
+            right: 0,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.2,
+            shadowRadius: 4,
+            elevation: 5,
+          }}>
+            {filteredInventory.slice(0, 6).map(item => (
+              <TouchableOpacity
+                key={item.id}
+                onPress={() => {
+                  setSearch(item.descripcion); // Autocompleta el campo de búsqueda
+                  setShowSuggestions(false);   // Oculta sugerencias al seleccionar
+                }}
+                style={{ padding: 12, borderBottomWidth: 1, borderBottomColor: '#eee' }}
+              >
+                <Text style={{ color: '#222' }}>{item.descripcion}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
 
         {/* Tabla de inventario */}
         {loadingInventory ? (

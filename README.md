@@ -126,7 +126,7 @@ El sistema implementa control de acceso basado en roles, permitiendo definir per
    ```
 3. Iniciar la aplicación:
    ```shell
-   expo start
+   npx expo start
    ```
 4. Escanear el QR con la app Expo Go o ejecutar en un emulador.
 

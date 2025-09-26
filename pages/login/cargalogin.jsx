@@ -5,12 +5,14 @@ import logocomplet from "../../assets/logocomplet.png";
 const { width } = Dimensions.get("window");
 
 export default function SplashScreen({ navigation }) {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const scaleAnim = useRef(new Animated.Value(0.7)).current;
-  const pulseAnim = useRef(new Animated.Value(1)).current;
+  // Animaciones principales del logo
+  const fadeAnim = useRef(new Animated.Value(0)).current;    // Opacidad del logo
+  const scaleAnim = useRef(new Animated.Value(0.7)).current; // Escala inicial del logo
+  const pulseAnim = useRef(new Animated.Value(1)).current;   // Pulso para efecto de latido
 
-  // Partículas tipo halo
+  // Configuración de partículas tipo halo
   const particleCount = 40;
+  // Cada partícula tiene valores animados para posición, escala y opacidad
   const particles = useRef(
     Array.from({ length: particleCount }, () => ({
       x: new Animated.Value(0),
@@ -21,7 +23,7 @@ export default function SplashScreen({ navigation }) {
   ).current;
 
   useEffect(() => {
-    // Animación del logo: fade-in + rebote + pulso
+    // Animación del logo: fade-in, rebote y pulso infinito
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -52,13 +54,13 @@ export default function SplashScreen({ navigation }) {
       ),
     ]).start();
 
-    // Animación de partículas tipo halo
+    // Animación de partículas: se dispersan en círculo y desaparecen
     particles.forEach((p) => {
-      const angle = Math.random() * 2 * Math.PI;
-      const distance = Math.random() * 120 + 60;
+      const angle = Math.random() * 2 * Math.PI; // Ángulo aleatorio
+      const distance = Math.random() * 120 + 60; // Distancia aleatoria desde el centro
 
       Animated.sequence([
-        Animated.delay(Math.random() * 300),
+        Animated.delay(Math.random() * 300), // Pequeño retraso aleatorio
         Animated.parallel([
           Animated.timing(p.x, {
             toValue: distance * Math.cos(angle),
@@ -84,18 +86,20 @@ export default function SplashScreen({ navigation }) {
       ]).start();
     });
 
-    // Navegar a Login
+    // Navega automáticamente a la pantalla de Login después de 2 segundos
     const timer = setTimeout(() => {
       if (navigation && typeof navigation.replace === "function") {
         navigation.replace("Login");
       }
     }, 2000);
 
+    // Limpia el temporizador si el componente se desmonta antes
     return () => clearTimeout(timer);
   }, [navigation]); // Solo navigation como dependencia
 
   return (
     <View style={styles.container}>
+      {/* Renderiza las partículas animadas */}
       {particles.map((p, index) => (
         <Animated.View
           key={index}
@@ -112,6 +116,7 @@ export default function SplashScreen({ navigation }) {
           ]}
         />
       ))}
+      {/* Logo animado */}
       <Animated.Image
         source={logocomplet}
         style={[
@@ -126,6 +131,7 @@ export default function SplashScreen({ navigation }) {
   );
 }
 
+// Estilos para el splash y partículas
 const styles = StyleSheet.create({
   container: {
     flex: 1,

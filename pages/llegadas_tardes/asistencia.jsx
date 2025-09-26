@@ -18,13 +18,16 @@ import { usePermiso } from '../../hookes/usePermiso';
 import { useSesion } from '../../hookes/useSesion';
 import { useAsistencias } from '../../hookes/useAsistencias';
 
-
+// Componente principal para la pantalla de asistencias
 export default function Inicio() {
+  // Estado para controlar la carga y errores de sesión
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
+  // Hook personalizado para obtener la sesión del usuario
   const sesion = useSesion();
 
+  // Efecto para manejar el tiempo de espera de la sesión
   useEffect(() => {
     let timer;
     if (!sesion || !sesion.usuario) {
@@ -32,7 +35,7 @@ export default function Inicio() {
       timer = setTimeout(() => {
         setLoading(false);
         setError(true);
-      }, 8000); // 8 segundos
+      }, 8000); // 8 segundos de espera antes de mostrar error
     } else {
       setLoading(false);
       setError(false);
@@ -41,14 +44,18 @@ export default function Inicio() {
       if (timer) clearTimeout(timer);
     };
   }, [sesion]);
+
   const navigation = useNavigation();
-  // Obtener el idPerfil y usar el hook de permiso
+
+  // Obtener el idPerfil y verificar permisos con hook personalizado
   const perfil_id = sesion?.usuario?.perfil ? Number(sesion.usuario.perfil) : null;
   const opcion_permiso = 2;
   const hasPermission = usePermiso(opcion_permiso, perfil_id);
-  // Usar el hook useAsistencias para obtener las asistencias
+
+  // Obtener asistencias usando hook personalizado
   const asistencias = useAsistencias(sesion, perfil_id);
 
+  // Mostrar indicador de carga mientras se obtiene la sesión
   if (loading) {
     return (
       <SafeAreaView style={styles.safeArea}>
@@ -60,6 +67,7 @@ export default function Inicio() {
     );
   }
 
+  // Mostrar mensaje de error si la sesión tarda demasiado
   if (error) {
     return (
       <SafeAreaView style={styles.safeArea}>
@@ -72,14 +80,17 @@ export default function Inicio() {
     );
   }
 
+  // Extraer información del usuario de la sesión
   const userSession = sesion.usuario;
 
+  // Render principal de la pantalla
   return (
     <SafeAreaView style={styles.safeArea}>
       <BarraNav/>{/* Barra de navegación personalizada */}
       <View style={styles.container}>
         <Text style={styles.title}>Toma de asistencias</Text>
 
+        {/* Botón para registrar asistencia usando QR */}
         <View style={{ alignItems: 'center', marginVertical: 30 }}>
           <TouchableOpacity
             onPress={() => {
@@ -107,6 +118,7 @@ export default function Inicio() {
           </TouchableOpacity>
         </View>
 
+        {/* Título y línea divisoria para la sección de llegadas tardes */}
         <View style={{ marginTop: 24, marginBottom: 8, alignSelf: 'flex-start', width: '100%' }}>
           <Text
             style={{
@@ -131,6 +143,7 @@ export default function Inicio() {
           />
         </View>
 
+        {/* Tabla de asistencias con scroll horizontal y vertical */}
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <View>
             <DataTable>
@@ -144,6 +157,7 @@ export default function Inicio() {
             </DataTable>
             <ScrollView style={{ maxHeight: 300 }} showsVerticalScrollIndicator={true}>
               <DataTable>
+                {/* Renderizar cada asistencia en una fila */}
                 {asistencias.map((asistencia, idx) => (
                   <DataTable.Row key={idx}>
                     <DataTable.Cell style={{ minWidth: 120 }}>{asistencia.documento}</DataTable.Cell>

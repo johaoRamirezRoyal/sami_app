@@ -1,19 +1,23 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Función para guardar los datos de la sesión
+/**
+ * Guarda los datos de la sesión (usuario y token) en AsyncStorage.
+ * @param {Object} usuario - Objeto con los datos del usuario.
+ * @param {string} token - Token de autenticación.
+ */
 const guardarSesion = async (usuario, token) => {
   try {
     await AsyncStorage.setItem('@usuario', JSON.stringify(usuario));
     await AsyncStorage.setItem('@token', token);
-      
   } catch (error) {
     console.error('Error al guardar la sesión:', error);
   }
 };
 
-
-
-// Función para obtener los datos de la sesión
+/**
+ * Obtiene los datos de la sesión almacenados en AsyncStorage.
+ * @returns {Object|null} Objeto con usuario, token y mensaje, o null si hay error.
+ */
 const obtenerSesion = async () => {
   try {
     const usuario = await AsyncStorage.getItem('@usuario');
@@ -29,22 +33,26 @@ const obtenerSesion = async () => {
   }
 };
 
-
-
-// Función para cerrar sesión
+/**
+ * Elimina los datos de la sesión del almacenamiento (cierra sesión).
+ */
 const cerrarSesion = async () => {
   try {
     await AsyncStorage.removeItem('@usuario');
     await AsyncStorage.removeItem('@token');
-        console.log('Sesión cerrada correctamente');
+    console.log('Sesión cerrada correctamente');
   } catch (error) {
     console.error('Error al cerrar la sesión:', error);
   }
 };
 
-
-
-// Ejemplo de uso después de login exitoso
+/**
+ * Realiza el login del usuario, guarda la sesión si es exitoso.
+ * @param {string} email - Email del usuario.
+ * @param {string} password - Contraseña del usuario.
+ * @param {string} urlLogin - URL del endpoint de login.
+ * @returns {Object} Resultado del login (success, usuario, token, error).
+ */
 const login = async (email, password, urlLogin = 'URL_LOGIN') => {
   try {
     const respuesta = await fetch(urlLogin, {

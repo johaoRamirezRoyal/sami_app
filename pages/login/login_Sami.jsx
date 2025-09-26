@@ -18,8 +18,10 @@ import fondo from '../../assets/fondo.jpg';
 import logo from '../../assets/logo.jpg';
 import { guardarSesion, obtenerSesion, login } from "../../components/sesion/sesion";
 import { BASE_URL } from "../../components/api/urlApi";
+
+// Componente principal de Login
 export default function Login_s ({ navigation }) {
-  // Estados
+  // Estados para los campos y la UI
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -28,10 +30,10 @@ export default function Login_s ({ navigation }) {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   
-
-  // Maneja el login
+  // Función para manejar el login
   const handleLogin = () => {
     setError('');
+    // Validación básica de usuario y contraseña
     if (username.trim().length < 4) {
       setError('El usuario debe tener al menos 4 caracteres.');
       return;
@@ -42,6 +44,7 @@ export default function Login_s ({ navigation }) {
     }
     setLoading(true);
 
+    // Llamada a la API para login
     const URL = `${BASE_URL}/usuarios/login`;
     fetch(URL, {
       method: 'POST',
@@ -52,11 +55,10 @@ export default function Login_s ({ navigation }) {
     })
       .then(response => response.json())
       .then(async data => {
-        
         setLoading(false);
         if (data && data.token) {
           setError('');
-          // Guarda la sesión aquí
+          // Guarda la sesión si el login es exitoso
           await guardarSesion(data.usuario, data.token);
           navigation.navigate('inicio');
         } else {
@@ -70,17 +72,16 @@ export default function Login_s ({ navigation }) {
       });
   };
 
-
   return (
     <View style={{ flex: 1 }}>
-      {/* Fondo */}
+      {/* Fondo de pantalla */}
       <ImageBackground 
         source={fondo} 
         style={{ position: 'absolute', width: '100%', height: '100%', opacity: 0.5 }} 
         resizeMode="cover" 
       />
 
-      {/* Contenido principal con KeyboardAvoidingView */}
+      {/* Contenedor principal con manejo de teclado */}
       <KeyboardAvoidingView
         style={{ flex: 1, justifyContent: 'center' }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -88,7 +89,7 @@ export default function Login_s ({ navigation }) {
       >
         <Card style={{ backgroundColor: 'rgba(255, 255, 255, 1)', margin: 20, padding: 20, borderRadius: 100 }}>
           <Card.Content>
-            {/* Logo y título */}
+            {/* Logo y título de la app */}
             <Image 
               source={logo} 
               style={{ width: 200, height: 200, alignSelf: 'center', marginBottom: 20, borderRadius: 100 }} 
@@ -99,7 +100,7 @@ export default function Login_s ({ navigation }) {
             </Text>
             <StatusBar style="auto" />
 
-            {/* Usuario */}
+            {/* Campo de usuario */}
             <TextInput
               label="User Name"
               value={username}
@@ -120,7 +121,7 @@ export default function Login_s ({ navigation }) {
               }}
             />
 
-            {/* Contraseña */}
+            {/* Campo de contraseña */}
             <TextInput
               label="Password"
               value={password}
@@ -149,14 +150,14 @@ export default function Login_s ({ navigation }) {
               }}
             />
 
-            {/* Mensaje de error */}
+            {/* Mensaje de error si existe */}
             {error ? (
               <Text style={{ color: 'red', alignSelf: 'center', marginTop: 8, marginBottom: 4 }}>
                 {error}
               </Text>
             ) : null}
 
-            {/* Botón Ingresar */}
+            {/* Botón para ingresar */}
             <View style={{ alignItems: 'center' }}>
               <TouchableOpacity
                 style={[

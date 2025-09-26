@@ -20,7 +20,9 @@ import { obtenerSesion, cerrarSesion } from "../../components/sesion/sesion";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
+// Componente principal de la barra de navegación
 export default function BarraNav({ activeItemKey = "first" }) {
+  // Estados para controlar visibilidad de los drawers y sesión
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [bottomDrawerVisible, setBottomDrawerVisible] = useState(false);
   const [drawerActive, setDrawerActive] = useState(null);
@@ -28,6 +30,7 @@ export default function BarraNav({ activeItemKey = "first" }) {
   const [pressedKey, setPressedKey] = useState(null);
   const navigation = useNavigation();
 
+  // Elementos del menú lateral
   const drawerItems = [
     { label: "Inicio", key: "first", icon: "home", screen: "inicio" },
     { label: "Reservas", key: "second", icon: "calendar", screen: "reserve" },
@@ -35,6 +38,7 @@ export default function BarraNav({ activeItemKey = "first" }) {
     { label: "Impuntualidad", key: "quarter", icon: "clock", screen: "llegadas_tarde" },
   ];
 
+  // Referencia para animaciones de los items del drawer
   const animatedValuesRef = useRef({});
   if (Object.keys(animatedValuesRef.current).length === 0) {
     drawerItems.forEach((item) => {
@@ -42,9 +46,11 @@ export default function BarraNav({ activeItemKey = "first" }) {
     });
   }
 
+  // Animación para el drawer inferior
   const bottomDrawerAnim = useRef(new Animated.Value(0)).current;
   const [internalVisible, setInternalVisible] = useState(false);
 
+  // Cargar sesión y último item activo al montar el componente
   useEffect(() => {
     const cargarSesion = async () => {
       const datosSesion = await obtenerSesion();
@@ -59,6 +65,7 @@ export default function BarraNav({ activeItemKey = "first" }) {
     cargarDrawerActive();
   }, []);
 
+  // Animación de resaltado de items del drawer
   useEffect(() => {
     drawerItems.forEach((item) => {
       const isHighlighted = drawerActive === item.key || pressedKey === item.key;
@@ -71,6 +78,7 @@ export default function BarraNav({ activeItemKey = "first" }) {
     });
   }, [drawerActive, pressedKey]);
 
+  // Animación de aparición/desaparición del drawer inferior
   useEffect(() => {
     if (bottomDrawerVisible) {
       setInternalVisible(true);
@@ -92,6 +100,7 @@ export default function BarraNav({ activeItemKey = "first" }) {
     }
   }, [bottomDrawerVisible]);
 
+  // Si no hay sesión, mostrar solo el logo
   if (!sesion) {
     return (
       <SafeAreaView style={styles.safeArea}>
@@ -102,9 +111,11 @@ export default function BarraNav({ activeItemKey = "first" }) {
     );
   }
 
+  // Obtener iniciales del usuario para el avatar
   const userSession = sesion.usuario;
   const iniciales_nombre = userSession.nombre.slice(0, 2).toUpperCase();
 
+  // Manejar selección de item del drawer lateral
   const handleItemPress = async (item) => {
     setDrawerActive(item.key);
     await AsyncStorage.setItem("drawerActive", item.key);
@@ -112,6 +123,7 @@ export default function BarraNav({ activeItemKey = "first" }) {
     if (item.screen) navigation.navigate(item.screen);
   };
 
+  // Interpolaciones para animaciones del drawer inferior
   const translateY = bottomDrawerAnim.interpolate({
     inputRange: [0, 1],
     outputRange: [500, 0],
@@ -131,17 +143,19 @@ export default function BarraNav({ activeItemKey = "first" }) {
         animationType="fade"
         onRequestClose={() => setDrawerVisible(false)}
       >
+        {/* Fondo oscuro al abrir el drawer */}
         <TouchableWithoutFeedback onPress={() => setDrawerVisible(false)}>
           <View style={styles.drawerOverlay} />
         </TouchableWithoutFeedback>
 
-        {/* 👇 Aquí cambiamos el ancho a 75% */}
+        {/* Contenedor del drawer lateral */}
         <View style={[styles.customDrawerContainer, { width: "75%" }]}>
           <View style={{ paddingHorizontal: 24, paddingTop: 24, paddingBottom: 8 }}>
             <Text style={{ fontSize: 28, color: "#004989", fontWeight: "bold" }}>Menú</Text>
             <View style={{ height: 2, backgroundColor: "#e0e0e0", marginTop: 8 }} />
           </View>
 
+          {/* Renderizado de los items del drawer lateral */}
           {drawerItems.map((item) => {
             const animatedValue = animatedValuesRef.current[item.key];
             const backgroundColor = animatedValue.interpolate({
@@ -191,15 +205,17 @@ export default function BarraNav({ activeItemKey = "first" }) {
         </View>
       </Modal>
 
-      {/* Barra superior */}
+      {/* Barra superior de la app */}
       <Appbar.Header style={styles.appbar }>
         <View style={{ flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+          {/* Botón para abrir el drawer lateral */}
           <Appbar.Action
             icon={drawerVisible ? "menu-open" : "menu"}
             onPress={() => setDrawerVisible(true)}
             size={36}
             style={{ marginLeft: 0 }}
           />
+          {/* Logo centrado */}
           <View style={{
             position: "absolute",
             left: 0,
@@ -212,12 +228,13 @@ export default function BarraNav({ activeItemKey = "first" }) {
           }}>
             <Image source={logoroyal} style={styles.logoBar} resizeMode="contain" />
           </View>
+          {/* Avatar del usuario, abre el drawer inferior */}
           <TouchableOpacity onPress={() => setBottomDrawerVisible(true)}>
             <Avatar.Text
               size={40}
               label={iniciales_nombre}
-              color="#fff" // texto blanco
-              style={{ marginRight: 9, backgroundColor: "#004989" }} // fondo azul
+              color="#fff"
+              style={{ marginRight: 9, backgroundColor: "#004989" }}
             />
           </TouchableOpacity>
         </View>
@@ -225,12 +242,13 @@ export default function BarraNav({ activeItemKey = "first" }) {
       <View style={{ paddingTop: 70 }}>
         {/* Aquí va el resto del contenido de la pantalla */}
       </View>
-      {/* Drawer inferior */}
+      {/* Drawer inferior (perfil y cerrar sesión) */}
       <Modal
         visible={internalVisible}
         transparent
         onRequestClose={() => setBottomDrawerVisible(false)}
       >
+        {/* Fondo oscuro al abrir el drawer inferior */}
         <TouchableWithoutFeedback onPress={() => setBottomDrawerVisible(false)}>
           <Animated.View
             style={{
@@ -243,6 +261,7 @@ export default function BarraNav({ activeItemKey = "first" }) {
           />
         </TouchableWithoutFeedback>
 
+        {/* Contenido del drawer inferior */}
         <Animated.View
           style={{
             transform: [{ translateY }],
@@ -259,16 +278,17 @@ export default function BarraNav({ activeItemKey = "first" }) {
             alignItems: "center",
           }}
         >
+          {/* Avatar grande del usuario */}
           <Avatar.Text
             size={150}
             label={iniciales_nombre}
-            color="#fff" // texto blanco
+            color="#fff"
             style={{
               position: "absolute",
               top: -75,
               alignSelf: "center",
               zIndex: 10,
-              backgroundColor: "#004989", // fondo azul
+              backgroundColor: "#004989",
             }}
           />
           <View style={{ height: 75 }} />
@@ -290,6 +310,7 @@ export default function BarraNav({ activeItemKey = "first" }) {
             </Text>
             <View style={{ width: "100%", height: 1, backgroundColor: "#e0e0e0", marginBottom: 18 }} />
 
+            {/* Botón para ver información personal */}
             <View style={{ alignItems: "center" }}>
               <TouchableOpacity
                 style={{
@@ -312,6 +333,7 @@ export default function BarraNav({ activeItemKey = "first" }) {
               </TouchableOpacity>
             </View>
 
+            {/* Botón para cerrar sesión */}
             <View style={{
               position: "absolute",
               left: 0,

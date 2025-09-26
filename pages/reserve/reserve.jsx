@@ -8,11 +8,12 @@ import { ActivityIndicator } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 // 2. Recursos locales (imágenes y estilos)
 import { styles } from '../../styles/inicio/inicioEstilo';
-import BarraNav from '../../components/nav/barra_nav'; // <--- Agrega esta 
+import BarraNav from '../../components/nav/barra_nav'; // Barra de navegación personalizada
 import { useSesion } from '../../hookes/useSesion';
 
 // --- Componente de reserva de salón embebido ---
 function ReservarSalon() {
+  // --- Estados locales para los campos del formulario ---
   const [salon, setSalon] = useState('');
   const [fecha, setFecha] = useState('');
   const [hora, setHora] = useState('');
@@ -27,13 +28,16 @@ function ReservarSalon() {
   const [fechaFocus, setFechaFocus] = useState(false);
   const [detallesFocus, setDetallesFocus] = useState(false);
 
+  // --- Opciones disponibles para salones y horas ---
   const salonesDisponibles = ['Salón A', 'Salón B', 'Salón C'];
   const horasDisponibles = ['08:00', '10:00', '14:00', '16:00'];
 
+  // --- Simula la consulta de disponibilidad ---
   const consultarDisponibilidad = () => {
     setDisponibilidad('Disponible');
   };
 
+  // --- Maneja la acción de reservar ---
   const reservar = () => {
     if (salon && fecha && hora && detalles) {
       alert('Reserva realizada con éxito.');
@@ -42,6 +46,7 @@ function ReservarSalon() {
     }
   };
 
+  // --- Renderiza el formulario de reserva ---
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -53,6 +58,7 @@ function ReservarSalon() {
         contentContainerStyle={{ paddingBottom: 40 }}
         keyboardShouldPersistTaps="handled"
       >
+        {/* Campo de selección de salón */}
         <TextInput
           label="Salón *"
           value={salon}
@@ -73,6 +79,7 @@ function ReservarSalon() {
           }}
         />
 
+        {/* Selector de fecha con DateTimePicker */}
         <TouchableOpacity onPress={() => setShowDatePicker(true)}>
           <TextInput
             label="Fecha *"
@@ -110,6 +117,7 @@ function ReservarSalon() {
           />
         )}
 
+        {/* Selección de hora */}
         <Text style={estilosReserva.label}>Horas disponibles *</Text>
         <RadioButton.Group onValueChange={setHora} value={hora}>
           {horasDisponibles.map((h, index) => (
@@ -117,6 +125,7 @@ function ReservarSalon() {
           ))}
         </RadioButton.Group>
 
+        {/* Complementos: Portátil y Sonido */}
         <Text style={estilosReserva.label}>Complementos *</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
           <Text style={{ flex: 1 }}>Portátil (0 disponibles)</Text>
@@ -127,6 +136,7 @@ function ReservarSalon() {
           <Switch value={sonido} onValueChange={() => setSonido(!sonido)} color="#3F51B5" />
         </View>
 
+        {/* Campo de detalles de la reserva */}
         <View style={{ marginBottom: 32 }}>
           <TextInput
             label="Detalles de la reserva *"
@@ -150,10 +160,12 @@ function ReservarSalon() {
           />
         </View>
 
+        {/* Botón para consultar disponibilidad */}
         <Button mode="contained" onPress={consultarDisponibilidad} style={estilosReserva.botonVerde}>
           Consultar disponibilidad
         </Button>
 
+        {/* Botón para reservar */}
         <Button icon="content-save" mode="contained" onPress={reservar} style={estilosReserva.botonReservar}>
           Reservar
         </Button>
@@ -162,6 +174,7 @@ function ReservarSalon() {
   );
 }
 
+// --- Estilos específicos para el formulario de reserva ---
 const estilosReserva = StyleSheet.create({
   scrollContainer: {
     flex: 1,
@@ -215,12 +228,13 @@ const estilosReserva = StyleSheet.create({
 
 // 3. Componente principal de la pantalla de inicio
 export default function Inicio() {
-  // --- Estados locales ---
+  // --- Estados locales para manejo de sesión y errores ---
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const sesion = useSesion();
   const navigation = useNavigation();
 
+  // --- Efecto para verificar la sesión del usuario ---
   useEffect(() => {
     let timer;
     if (!sesion || !sesion.usuario) {
@@ -268,7 +282,7 @@ export default function Inicio() {
     userSession = sesion.usuario;
   }
 
-  // --- Renderizado principal ---
+  // --- Renderizado principal de la pantalla de reserva ---
   return (
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView

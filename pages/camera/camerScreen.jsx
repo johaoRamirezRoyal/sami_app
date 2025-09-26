@@ -20,8 +20,10 @@ import CustomAlert from '../../components/notification/alert';
 import { useNavigation } from '@react-navigation/native';
 import { BASE_URL } from '../../components/api/urlApi';
 
+// Obtiene dimensiones de la pantalla
 const { width, height } = Dimensions.get("window");
 const innerDimension = 300;
+// Define el área exterior e interior para el overlay
 const outer = rrect(rect(0, 0, width, height), 0, 0);
 const inner = rrect(
   rect(
@@ -34,13 +36,13 @@ const inner = rrect(
   50
 );
 
-// Overlay con animación de pulso + láser de escaneo
+// Overlay animado con pulso y láser de escaneo
 const AnimatedOverlay = () => {
   const pulseAnim = useRef(new Animated.Value(0)).current;
   const laserAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // Pulso del borde
+    // Animación de pulso del borde
     Animated.loop(
       Animated.sequence([
         Animated.timing(pulseAnim, {
@@ -56,7 +58,7 @@ const AnimatedOverlay = () => {
       ])
     ).start();
 
-    // Movimiento del láser
+    // Animación del láser de escaneo
     Animated.loop(
       Animated.timing(laserAnim, {
         toValue: innerDimension,
@@ -66,6 +68,7 @@ const AnimatedOverlay = () => {
     ).start();
   }, []);
 
+  // Interpolaciones para escala y opacidad del borde
   const scale = pulseAnim.interpolate({
     inputRange: [0, 1],
     outputRange: [1, 1.05],
@@ -76,7 +79,7 @@ const AnimatedOverlay = () => {
     outputRange: [0.7, 1],
   });
 
-  // Cambia 'top' por 'transform: [{ translateY: laserAnim }]'
+  // Renderiza el overlay animado
   return (
     <View style={StyleSheet.absoluteFill}>
       {/* Fondo difuminado */}
@@ -100,7 +103,7 @@ const AnimatedOverlay = () => {
           overflow: 'hidden',
         }}
       >
-        {/* Láser de escaneo */}
+        {/* Láser de escaneo animado */}
         <Animated.View
           style={{
             position: 'absolute',
@@ -118,16 +121,19 @@ const AnimatedOverlay = () => {
 };
 
 export default function CameraScreen() {
+  // Permisos de cámara
   const [permission, requestPermission] = useCameraPermissions();
   const isPermissionGranted = Boolean(permission?.granted);
 
-  const qrLock = useRef(false);
+  // Referencias y estados
+  const qrLock = useRef(false); // Evita múltiples lecturas de QR
   const appState = useRef(AppState.currentState);
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertType, setAlertType] = useState('success');
   const navigation = useNavigation();
 
+  // Animación de aparición de la tarjeta de permiso
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -138,6 +144,7 @@ export default function CameraScreen() {
     }).start();
   }, []);
 
+  // Maneja el estado de la app (foreground/background)
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
       if (
@@ -154,6 +161,7 @@ export default function CameraScreen() {
   return (
     <LinearGradient colors={['#004989', '#7C4DFF']} style={styles.gradient}>
       <SafeAreaView style={styles.container}>
+        {/* Si no hay permiso, muestra tarjeta para solicitarlo */}
         {!isPermissionGranted && (
           <Animated.View style={[styles.card, { 
             opacity: fadeAnim, 
@@ -180,12 +188,14 @@ export default function CameraScreen() {
           </Animated.View>
         )}
 
+        {/* Si hay permiso, muestra la cámara y overlay */}
         {isPermissionGranted && (
           <View style={StyleSheet.absoluteFill}>
             {Platform.OS === 'android' && <StatusBar hidden />}
             <CameraView
               style={StyleSheet.absoluteFill}
               facing="back"
+              // Maneja el evento de escaneo de código QR
               onBarcodeScanned={async ({ data }) => {
                 if (data && !qrLock.current) {
                   const ahora = new Date();
@@ -196,6 +206,7 @@ export default function CameraScreen() {
                   };
                   qrLock.current = true;
 
+                  // Si el QR tiene error
                   if(data.error){
                     setAlertMessage(`Error al leer el código QR: ${data.error}`);
                     setAlertType('error');
@@ -208,6 +219,7 @@ export default function CameraScreen() {
                   }
 
                   try {
+                    // Envía la asistencia al backend
                     const response = await fetch(`${BASE_URL}/asistencias_estudiantes/registrarAsistencia`, {
                       method: "POST",
                       headers: {
@@ -237,6 +249,7 @@ export default function CameraScreen() {
                     console.error('Error registrando asistencia:', error);
                   }
 
+                  // Intenta abrir el dato como URL (opcional)
                   setTimeout(async () => {
                     await Linking.openURL(data);
                   }, 500);
@@ -247,6 +260,7 @@ export default function CameraScreen() {
           </View>
         )}
 
+        {/* Alerta personalizada */}
         {alertVisible && (
           <CustomAlert
             message={alertMessage}
@@ -259,6 +273,7 @@ export default function CameraScreen() {
   );
 }
 
+// Estilos de la pantalla
 const styles = StyleSheet.create({
   gradient: {
     flex: 1,

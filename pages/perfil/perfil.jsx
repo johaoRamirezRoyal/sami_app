@@ -16,12 +16,12 @@ import BarraNav from '../../components/nav/barra_nav';
 import { styles } from '../../styles/perfil/perfilEstilo';
 import { useSesion } from '../../hookes/useSesion';
 
+// Componente principal de la pantalla de perfil
 export default function PerfilScreen() {
-      // Usar el nuevo hook useSesion
+  // Hook personalizado para obtener la sesión del usuario
   const sesion = useSesion();
 
-
-
+  // Si la sesión aún no está cargada, mostrar pantalla de carga
   if (!sesion) {
     return (
       <SafeAreaView style={styles.loadingContainer}>
@@ -30,13 +30,15 @@ export default function PerfilScreen() {
     );
   }
 
+  // Extraer datos del usuario de la sesión
   const usuario = sesion.usuario || {};
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      {/* Barra de navegación superior */}
       <BarraNav />
       <ScrollView contentContainerStyle={styles.container}>
-        {/* Avatar animado */}
+        {/* Avatar animado con gradiente */}
         <Animatable.View
           animation="bounceIn"
           duration={1200}
@@ -55,15 +57,16 @@ export default function PerfilScreen() {
           </LinearGradient>
         </Animatable.View>
 
-        {/* Nombre animado */}
+        {/* Nombre del usuario animado */}
         <Animatable.Text animation="fadeInDown" delay={300} style={styles.name}>
           {usuario.nombre}
         </Animatable.Text>
 
-        {/* Tarjeta de información animada */}
+        {/* Tarjeta con información del usuario, animada */}
         <Animatable.View animation="fadeInUp" delay={500} style={styles.card}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             <View style={{ flexDirection: 'column' }}>
+              {/* Item: Nombre */}
               <View style={styles.item}>
                 <MaterialCommunityIcons name="account" size={24} color="#004989" />
                 <View style={styles.textContainer}>
@@ -71,6 +74,7 @@ export default function PerfilScreen() {
                   <Text style={styles.itemText}>{usuario.nombre}</Text>
                 </View>
               </View>
+              {/* Item: Apellido */}
               <View style={styles.item}>
                 <MaterialCommunityIcons name="account-outline" size={24} color="#004989" />
                 <View style={styles.textContainer}>
@@ -78,6 +82,7 @@ export default function PerfilScreen() {
                   <Text style={styles.itemText}>{usuario.apellido}</Text>
                 </View>
               </View>
+              {/* Item: Correo */}
               <View style={styles.item}>
                 <MaterialCommunityIcons name="email" size={24} color="#004989" />
                 <View style={styles.textContainer}>
@@ -85,6 +90,7 @@ export default function PerfilScreen() {
                   <Text style={styles.itemText}>{usuario.correo}</Text>
                 </View>
               </View>
+              {/* Item: Documento */}
               <View style={styles.item}>
                 <MaterialCommunityIcons name="card-account-details" size={24} color="#004989" />
                 <View style={styles.textContainer}>
@@ -92,6 +98,7 @@ export default function PerfilScreen() {
                   <Text style={styles.itemText}>{usuario.documento}</Text>
                 </View>
               </View>
+              {/* Item: Nivel */}
               <View style={styles.item}>
                 <MaterialCommunityIcons name="star" size={24} color="#004989" />
                 <View style={styles.textContainer}>

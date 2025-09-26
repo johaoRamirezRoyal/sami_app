@@ -3,21 +3,22 @@ import { StyleSheet, Modal, TouchableWithoutFeedback } from 'react-native';
 
 // Estilos principales de la pantalla de ayuda
 export const styles = StyleSheet.create({
-  // Contenedor raíz de la pantalla
+  // Contenedor raíz de la pantalla de ayuda
   root: {
     flex: 1,
-    backgroundColor: '#f5f8fa',
+    backgroundColor: '#f5f8fa', // Fondo claro
   },
-  // Drawer flotante
+  // Fondo semitransparente para el drawer flotante
   drawerOverlay: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.3)',
+    backgroundColor: 'rgba(0,0,0,0.3)', // Oscurece el fondo
     zIndex: 100,
   },
+  // Contenedor lateral del drawer
   drawerContainer: {
     position: 'absolute',
     top: 0,
@@ -25,7 +26,7 @@ export const styles = StyleSheet.create({
     width: 260,
     height: '100%',
     backgroundColor: '#fff',
-    elevation: 8,
+    elevation: 8, // Sombra en Android
     zIndex: 101,
     paddingTop: 40,
   },
@@ -42,7 +43,7 @@ export const styles = StyleSheet.create({
     shadowRadius: 6,
     zIndex: 10,
   },
-  // Logo pequeño para la barra
+  // Logo pequeño para la barra superior
   logoBar: {
     width: 50,
     height: 50,
@@ -56,18 +57,22 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingTop: 16,
   },
+  // Contenido de cada tab/pestaña
   tabContent: {
     padding: 12,
   },
+  // Título pequeño
   h5: {
     fontSize: 18,
     color: '#222',
     marginBottom: 8,
   },
+  // Texto en negrita y color institucional
   bold: {
     fontWeight: 'bold',
     color: '#004989',
   },
+  // Estilo para enlaces
   link: {
     color: '#1976d2',
     textDecorationLine: 'underline',
@@ -80,7 +85,7 @@ export const styles = StyleSheet.create({
     height: 140,
     marginBottom: 16,
   },
-  // Contenedor y estilos para el video
+  // Contenedor para el video (YouTube, etc)
   videoContainer: {
     width: '100%',
     aspectRatio: 16 / 9,
@@ -90,13 +95,14 @@ export const styles = StyleSheet.create({
     overflow: 'hidden',
     backgroundColor: '#000',
   },
+  // Estilo para el WebView del video
   webview: {
     flex: 1,
     width: '100%',
     height: '100%',
     backgroundColor: '#000',
   },
-  // Texto principal
+  // Texto principal destacado
   text: {
     fontSize: 22,
     color: '#004989',

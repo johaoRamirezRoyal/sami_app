@@ -20,29 +20,29 @@ export default function Inicio() {
   // ------------------------------
   // 2.1. ESTADOS PARA MODAL REPORTE
   // ------------------------------
-  const [modalVisible, setModalVisible] = useState(false);
-  const [reportItem, setReportItem] = useState(null);
-  const [reportText, setReportText] = useState('');
-  const [reportLoading, setReportLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false); // Controla la visibilidad del modal de reporte
+  const [reportItem, setReportItem] = useState(null);      // Artículo seleccionado para reportar
+  const [reportText, setReportText] = useState('');        // Texto del reporte
+  const [reportLoading, setReportLoading] = useState(false); // Estado de carga al enviar reporte
 
   // ------------------------------
   // 2.2. ESTADOS DE SESIÓN Y NAVEGACIÓN
   // ------------------------------
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const sesion = useSesion();
-  const navigation = useNavigation();
+  const [loading, setLoading] = useState(true); // Estado de carga de la sesión
+  const [error, setError] = useState(false);    // Estado de error de sesión
+  const sesion = useSesion();                   // Hook personalizado para obtener sesión
+  const navigation = useNavigation();           // Hook de navegación
 
   // ------------------------------
   // 2.3. ESTADOS DE INVENTARIO Y PAGINACIÓN
   // ------------------------------
-  const [inventory, setInventory] = useState([]);
-  const [search, setSearch] = useState('');
-  const [page, setPage] = useState(1); // Backend usa 1-index
-  const [limit, setLimit] = useState(5);
-  const [total, setTotal] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
-  const [loadingInventory, setLoadingInventory] = useState(false);
+  const [inventory, setInventory] = useState([]); // Lista de artículos del inventario
+  const [search, setSearch] = useState('');       // Texto de búsqueda
+  const [page, setPage] = useState(1);            // Página actual (1-index)
+  const [limit, setLimit] = useState(5);          // Cantidad de artículos por página
+  const [total, setTotal] = useState(0);          // Total de artículos
+  const [totalPages, setTotalPages] = useState(1);// Total de páginas
+  const [loadingInventory, setLoadingInventory] = useState(false); // Estado de carga del inventario
 
   // ==============================
   // 3. EFECTOS Y FUNCIONES
@@ -56,7 +56,7 @@ export default function Inicio() {
       timer = setTimeout(() => {
         setLoading(false);
         setError(true);
-      }, 8000);
+      }, 8000); // Espera 8 segundos antes de mostrar error
     } else {
       setLoading(false);
       setError(false);
@@ -67,6 +67,7 @@ export default function Inicio() {
   const userSession = sesion?.usuario;
 
   // 3.2. Filtrar inventario localmente (solo si hay búsqueda)
+  // Si hay texto en el buscador, filtra los artículos por descripción
   const filteredInventory = search.trim() === ''
     ? inventory
     : inventory.filter(item => (item.descripcion ?? '').toLowerCase().includes(search.toLowerCase()));
@@ -93,6 +94,7 @@ export default function Inicio() {
   }, [page, limit, userSession, loading]);
 
   // 3.5. Cambiar límite de artículos por página
+  // Valida y ajusta el límite de artículos por página
   const handleLimitChange = (text) => {
     let value = parseInt(text.replace(/[^0-9]/g, ''));
     if (isNaN(value) || value < 1) value = 1;
@@ -105,6 +107,7 @@ export default function Inicio() {
   // 4. RENDER DE PANTALLAS DE CARGA Y ERROR
   // ==============================
   if (loading) {
+    // Muestra indicador de carga mientras se valida la sesión
     return (
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.container}>
@@ -116,6 +119,7 @@ export default function Inicio() {
   }
 
   if (error) {
+    // Muestra mensaje de error si la sesión tarda demasiado
     return (
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.container}>
@@ -132,7 +136,7 @@ export default function Inicio() {
   // ==============================
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* Barra de navegación */}
+      {/* Barra de navegación superior */}
       <BarraNav />
 
       <View style={styles.container}>
@@ -169,6 +173,7 @@ export default function Inicio() {
                     if (!reportText.trim()) return;
                     setReportLoading(true);
                     try {
+                      // Envía el reporte al backend
                       const res = await fetch(`${BASE_URL}/inventario/reportar`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -208,7 +213,7 @@ export default function Inicio() {
         <Text style={stylesLis.title}>Inventario</Text>
         <View style={stylesLis.separator} />
 
-        {/* Buscador */}
+        {/* Buscador de artículos */}
         <View style={stylesLis.searchContainer}>
           <TextInput
             placeholder="Buscar artículo"
@@ -221,6 +226,7 @@ export default function Inicio() {
 
         {/* Tabla de inventario */}
         {loadingInventory ? (
+          // Muestra indicador de carga mientras se obtiene el inventario
           <ActivityIndicator size="large" color="#004989" style={{ marginVertical: 20 }} />
         ) : (
           <ScrollView horizontal showsHorizontalScrollIndicator={true}>

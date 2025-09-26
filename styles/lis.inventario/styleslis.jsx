@@ -1,20 +1,23 @@
+// Estilos para la pantalla de listado de inventario en React Native.
+// Cada objeto define estilos para un componente o sección específica de la UI.
+
 import { StyleSheet } from 'react-native';
 
 export const stylesLis = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f6f6f6',
+    backgroundColor: '#f6f6f6', // Fondo gris claro para toda la pantalla
   },
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#f6f6f6',
+    backgroundColor: '#f6f6f6', // Fondo gris claro para el contenedor principal
   },
   title: {
     fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 4,
-    color: '#004989',
+    color: '#004989', // Azul oscuro para el título
     textAlign: 'left',
     letterSpacing: 1,
     alignSelf: 'flex-start',
@@ -57,6 +60,7 @@ export const stylesLis = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 6,
   },
+  // Estilos para las celdas de la cabecera de la tabla
   tableHeaderCell: {
     minWidth: 250,
     justifyContent: 'center',
@@ -96,7 +100,7 @@ export const stylesLis = StyleSheet.create({
   },
   reportBtn: {
     alignSelf: 'center',
-    backgroundColor: '#e53935',
+    backgroundColor: '#e53935', // Rojo para el botón de reporte
     borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 4,

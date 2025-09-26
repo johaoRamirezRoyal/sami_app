@@ -1,6 +1,16 @@
 import { useState, useEffect } from 'react';
 import { BASE_URL } from '../components/api/urlApi';
 
+/**
+ * Hook personalizado para obtener las asistencias del día de hoy.
+ * 
+ * @param {string} sesion - Token o identificador de sesión del usuario.
+ * @param {string|number} perfil_id - ID del perfil del usuario.
+ * @returns {Array} asistencias - Lista de asistencias obtenidas del backend.
+ * 
+ * Este hook realiza una petición al endpoint de asistencias del día actual
+ * cuando cambian los valores de 'sesion' o 'perfil_id'.
+ */
 export function useAsistencias(sesion, perfil_id) {
   const [asistencias, setAsistencias] = useState([]);
 

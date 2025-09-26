@@ -1,18 +1,19 @@
 import { StyleSheet } from 'react-native';
 
+// Estilos para la pantalla de inicio y componentes relacionados
 export const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f1f2f6',
+    backgroundColor: '#f1f2f6', // Fondo general de la pantalla
   },
-  // Drawer flotante
+  // Drawer flotante (menú lateral personalizado)
   drawerOverlay: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.3)',
+    backgroundColor: 'rgba(0,0,0,0.3)', // Sombra semitransparente detrás del drawer
     zIndex: 100,
   },
   customDrawerContainer: {
@@ -35,20 +36,20 @@ export const styles = StyleSheet.create({
   drawerItem: {
     borderRadius: 30,
     marginVertical: 2,
-    backgroundColor: 'transparent',
+    backgroundColor: 'transparent', // Fondo transparente para ítems inactivos
   },
   drawerItemActive: {
     borderRadius: 30,
     marginVertical: 2,
-    backgroundColor: 'rgba(0,73,137,0.5)', // #004989 con 50% opacidad
+    backgroundColor: 'rgba(0,73,137,0.5)', // Fondo azul con opacidad para ítem activo
   },
   drawerItemLabel: {
-    color: '#222', // Color normal para los demás
+    color: '#222', // Color de texto normal
     fontWeight: 'bold',
     fontSize: 16,
   },
   drawerItemLabelActive: {
-    color: '#fff', // Color blanco para el texto activo
+    color: '#fff', // Color de texto para ítem activo
     fontWeight: 'bold',
   },
   // Barra de navegación superior flotante
@@ -64,17 +65,18 @@ export const styles = StyleSheet.create({
     shadowRadius: 6,
     zIndex: 10,
     height: 70,
-    marginTop: 0, // ← asegúrate que no tenga margen superior
-    top: 0,       // ← posición absoluta arriba
-    position: 'absolute', // ← posición absoluta
+    marginTop: 0, // Sin margen superior
+    top: 0,       // Posición absoluta arriba
+    position: 'absolute',
     left: 0,
     right: 0,
   },
-  // Logo pequeño para la barra
+  // Logo pequeño para la barra superior
   logoBar: {
     width: 50,
     height: 50,
   },
+  // Contenedor principal de la pantalla
   container: {
     flex: 1,
     backgroundColor: 'rgba(255,255,255,0.97)',
@@ -89,20 +91,21 @@ export const styles = StyleSheet.create({
     shadowRadius: 16,
     elevation: 8,
   },
+  // Logo principal grande
   logo: {
     width: 150,
     height: 150,
     alignSelf: 'center',
     marginVertical: 20,
   },
-
+  // Logo alternativo más grande
   logocm: {
     width: 250,
     height: 250,
     alignSelf: 'center',
     marginVertical: 20,
   },
-
+  // Título principal
   title: {
     fontSize: 26,
     fontWeight: 'bold',
@@ -111,6 +114,7 @@ export const styles = StyleSheet.create({
     letterSpacing: 0.2,
     textAlign: 'center',
   },
+  // Subtítulo o descripción
   subtitle: {
     fontSize: 16,
     color: '#636e72',
@@ -119,6 +123,7 @@ export const styles = StyleSheet.create({
     marginBottom: 24,
     letterSpacing: 0.5,
   },
+  // Botón principal
   button: {
     backgroundColor: '#004989',
     borderRadius: 30,
@@ -131,10 +136,11 @@ export const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 4,
   },
+  // Texto del botón
   buttonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
-    letterSpacing: 1, // <-- Completa el valor aquí
+    letterSpacing: 1, // Espaciado entre letras
   },
 });

@@ -1,11 +1,11 @@
-> Why do I have a folder named ".expo-shared" in my project?
+> ¿Por qué tengo una carpeta llamada ".expo-shared" en mi proyecto?
 
-The ".expo-shared" folder is created when running commands that produce state that is intended to be shared with all developers on the project. For example, "npx expo-optimize".
+La carpeta ".expo-shared" se crea al ejecutar comandos que producen un estado que debe ser compartido con todos los desarrolladores del proyecto. Por ejemplo, "npx expo-optimize".
 
-> What does the "assets.json" file contain?
+> ¿Qué contiene el archivo "assets.json"?
 
-The "assets.json" file describes the assets that have been optimized through "expo-optimize" and do not need to be processed again.
+El archivo "assets.json" describe los recursos que han sido optimizados mediante "expo-optimize" y que no necesitan ser procesados nuevamente.
 
-> Should I commit the ".expo-shared" folder?
+> ¿Debo subir la carpeta ".expo-shared" al repositorio?
 
-Yes, you should share the ".expo-shared" folder with your collaborators.
+Sí, debes compartir la carpeta ".expo-shared" con tus colaboradores.

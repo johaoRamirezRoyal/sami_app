@@ -14,6 +14,7 @@ import inventario from './pages/lis.Inventario/lis.Inventario';
 import SplashScreen from './pages/login/cargalogin';
 import PerfilScreen from './pages/perfil/perfil'; // Importa tu pantalla de perfil aquí
 import BarraNav from './components/nav/barra_nav';
+import Reportes from './pages/reportes/reportes'; // <--- Agrega esta línea
 
 const Stack = createNativeStackNavigator();
 
@@ -87,6 +88,11 @@ export default function App() {
         <Stack.Screen 
           name="perfil" 
           component={PerfilScreen} 
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name="reportes" 
+          component={Reportes} 
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

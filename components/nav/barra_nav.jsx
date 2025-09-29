@@ -35,16 +35,21 @@ export default function BarraNav({ activeItemKey = "first" }) {
     { label: "Inicio", key: "first", icon: "home", screen: "inicio" },
     { label: "Reservas", key: "second", icon: "calendar", screen: "reserve" },
     { label: "lis. Inventario", key: "third", icon: "archive", screen: "inventario" },
+    { label: "Reportes", key: "fifth", icon: "file-chart", screen: "reportes" },
     { label: "Impuntualidad", key: "quarter", icon: "clock", screen: "llegadas_tarde" },
   ];
 
   // Referencia para animaciones de los items del drawer
   const animatedValuesRef = useRef({});
-  if (Object.keys(animatedValuesRef.current).length === 0) {
+
+  // Asegura que cada item tenga su Animated.Value
+  useEffect(() => {
     drawerItems.forEach((item) => {
-      animatedValuesRef.current[item.key] = new Animated.Value(0);
+      if (!animatedValuesRef.current[item.key]) {
+        animatedValuesRef.current[item.key] = new Animated.Value(0);
+      }
     });
-  }
+  }, [drawerItems]);
 
   // Animación para el drawer inferior
   const bottomDrawerAnim = useRef(new Animated.Value(0)).current;

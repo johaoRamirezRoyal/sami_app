@@ -6,6 +6,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { getFocusedRouteNameFromRoute, useNavigation } from '@react-navigation/native';
 import { ActivityIndicator } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { MaterialCommunityIcons } from '@expo/vector-icons'; // <--- Agrega esta línea si usas Expo
 // 2. Recursos locales (imágenes y estilos)
 import { styles } from '../../styles/inicio/inicioEstilo';
 import BarraNav from '../../components/nav/barra_nav'; // Barra de navegación personalizada
@@ -316,6 +317,34 @@ export default function Inicio() {
                 width: '100%',
               }}
             />
+          </View>
+          {/* Pantalla gris de "En construcción" que tapa solo el contenido debajo del título */}
+          <View
+            style={{
+              position: 'absolute',
+              top: 0, // Ajusta este valor si el título es más alto o bajo
+              left: 0,
+              right: 0,
+              bottom: 0, // <--- Esto asegura que cubre hasta el final
+              backgroundColor: '#edededc9',
+              zIndex: 99,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            pointerEvents="auto"
+          >
+            <MaterialCommunityIcons
+              name="tools"
+              size={48}
+              color="#b0b0b0"
+              style={{ marginBottom: 12 }}
+            />
+            <Text style={{ color: '#474747ff', fontSize: 18, fontWeight: 'bold', marginBottom: 4 }}>
+              ¡En construcción!
+            </Text>
+            <Text style={{ color: '#777777ff', fontSize: 15, textAlign: 'center', maxWidth: 260 }}>
+              Estamos trabajando para traerte esta sección pronto.
+            </Text>
           </View>
           {/* Formulario debajo del título fijo */}
           <View style={{ flex: 1, width: '100%' }}>

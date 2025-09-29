@@ -69,7 +69,7 @@ export default function Inicio() {
 
   const userSession = sesion?.usuario;
   if (userSession) {
-    console.log('userSession:', userSession);
+    //console.log('userSession:', userSession);
   }
 
   // 3.4. Obtener inventario desde el backend (paginado)
@@ -78,7 +78,7 @@ export default function Inicio() {
 
     setLoadingInventory(true);
     const url = `${BASE_URL}/inventario/usuario/${userSession?.id_log}?page=${page}&limit=${limit}`;
-    console.log('Inventario fetch URL:', url); // <-- Agregado para debug
+    //console.log('Inventario fetch URL:', url); // <-- Agregado para debug
     fetch(url)
       .then(response => response.json())
       .then((data) => {
@@ -95,7 +95,7 @@ export default function Inicio() {
   // 3.4.1. Obtener TODO el inventario para búsqueda global (solo una vez)
   useEffect(() => {
     if (!userSession) return;
-    fetch(`${BASE_URL}/inventario/usuario/${userSession?.id_log}}`)
+    fetch(`${BASE_URL}/inventario/usuario/${userSession?.id_log}`)
       .then(response => response.json())
       .then((data) => {
         setAllInventory(Array.isArray(data.data) ? data.data : []);
@@ -365,9 +365,18 @@ export default function Inicio() {
                               setReportItem(item);
                               setModalVisible(true);
                             }}
-                            style={stylesLis.reportBtn}
+                            style={[
+                              stylesLis.reportBtn,
+                              item.nombre_estado === 'Mantenimiento Correctivo' && { backgroundColor: '#ccc' } // opcional: cambia color si está deshabilitado
+                            ]}
+                            disabled={item.nombre_estado === 'Mantenimiento Correctivo'}
                           >
-                            <Text style={stylesLis.reportBtnText}>reportar</Text>
+                            <Text style={[
+                              stylesLis.reportBtnText,
+                              item.nombre_estado === 'Mantenimiento Correctivo' && { color: '#888' } // opcional: cambia color texto si está deshabilitado
+                            ]}>
+                              reportar
+                            </Text>
                           </TouchableOpacity>
                         </DataTable.Cell>
                       </DataTable.Row>

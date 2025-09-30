@@ -4,7 +4,7 @@
     "slug": "sami_app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icono.png",      
+    "icon": "./assets/icono.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
@@ -38,6 +38,14 @@
           "cameraPermission": "ALLOW $(PRODUCT_NAME) TO ACCESS THE CAMERA",
           "microphonePermission": "ALLOW $(PRODUCT_NAME) TO ACCESS THE MICROPHONE",
           "recordAudioAndroid": true
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
         }
       ]
     ],

@@ -9,7 +9,7 @@ import { BASE_URL } from "../api/urlApi"; // Importa la URL base de la API
 export const permiso = async (id_opcion, id_perfil) => {
     // Construye la URL para consultar los permisos
     const url = `${BASE_URL}/permisos?id_opcion=${id_opcion}&perfil=${id_perfil}`;
-    console.log('URL de permisos:', url); // Muestra la URL construida en consola para depuración
+    //console.log('URL de permisos:', url); // Muestra la URL construida en consola para depuración
     
     try {
         // Realiza la petición a la API

@@ -11,7 +11,7 @@ import { BASE_URL } from '../components/api/urlApi';
  * Este hook realiza una petición al endpoint de asistencias del día actual
  * cuando cambian los valores de 'sesion' o 'perfil_id'.
  */
-export function useAsistencias(sesion, perfil_id) {
+export function useAsistencias(sesion, perfil_id, refresh) {
   const [asistencias, setAsistencias] = useState([]);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export function useAsistencias(sesion, perfil_id) {
       }
     };
     fetchAsistencias();
-  }, [sesion, perfil_id]);
+  }, [sesion, perfil_id, refresh]);
 
   return asistencias;
 }

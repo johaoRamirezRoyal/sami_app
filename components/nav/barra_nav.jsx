@@ -36,7 +36,7 @@ export default function BarraNav({ activeItemKey = "first" }) {
     { label: "Reservas", key: "second", icon: "calendar", screen: "reserve" },
     { label: "lis. Inventario", key: "third", icon: "archive", screen: "inventario" },
     { label: "Reportes", key: "fifth", icon: "file-chart", screen: "reportes" },
-    { label: "Impuntualidad", key: "quarter", icon: "clock", screen: "llegadas_tarde" },
+    { label: "llegadas tarde", key: "quarter", icon: "clock", screen: "llegadas_tarde" },
   ];
 
   // Referencia para animaciones de los items del drawer

@@ -5,46 +5,89 @@ import { StyleSheet } from "react-native";
 // Definición de estilos para el componente de Login
 export const styles = StyleSheet.create({
   container: {
-    flex: 1, // Ocupa todo el espacio disponible
-    backgroundColor: '#f5f6fa', // Color de fondo principal
-    alignItems: 'center', // Centra los hijos horizontalmente
-    justifyContent: 'center', // Centra los hijos verticalmente
-    padding: 20, // Espaciado interno
+    flex: 1,
+    backgroundColor: '#eaf6ff', // Fondo más claro
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  card: {
+    backgroundColor: 'rgba(185, 185, 185, 0.38)',
+    margin: 16,
+    padding: 0,
+    borderRadius:80, // Menos redondeado
+    shadowColor: '#ffffffff',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.18,
+    shadowRadius: 16,
+    elevation: 12,
+  },
+  logo: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    alignSelf: 'center',
+    marginBottom: 12,
+    borderWidth: 2,
+    borderColor: '#004989',
+    backgroundColor: '#fff',
   },
   title: {
-    fontSize: 28, // Tamaño de fuente del título
-    fontWeight: 'bold', // Negrita
-    color: '#2d3436', // Color del texto
-    marginBottom: 30, // Espacio debajo del título
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#000000ff',
+    marginBottom: 30,
+    textAlign: 'center',
+    letterSpacing: 0.5,
   },
   button: {
-    width: 190,             // Ancho del botón
-    marginVertical: 10,     // Espacio vertical entre botones
-    borderRadius: 35,       // Bordes redondeados
-    elevation: 5,           // Sombra (solo Android)
-    backgroundColor: '#004989', // Color de fondo del botón
-    paddingVertical: 7,     // Altura del botón
-    paddingHorizontal: 0,   // Sin espacio lateral
-    alignItems: 'center',   // Centra el texto horizontalmente
-    justifyContent: 'center', // Centra el texto verticalmente
+    width: 200,
+    marginVertical: 19,
+    borderRadius: 40,
+    elevation: 6,
+    backgroundColor: '#004989',
+    paddingVertical: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000000ff',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
   },
   buttonDisabled: {
-    backgroundColor: '#b0b0b0', // Color para botón deshabilitado
+    backgroundColor: '#b0b0b0',
   },
   buttonLabel: {
-    fontSize: 19,           // Tamaño del texto del botón
-    color: '#fff',          // Color del texto
-    fontWeight: '600',      // Seminegrita
-    letterSpacing: 1,       // Espaciado entre letras
+    fontSize: 20,
+    color: '#fff',
+    fontWeight: '700',
+    letterSpacing: 1,
   },
   textInput: {
-    borderRadius: 30,       // Bordes redondeados
-    backgroundColor: 'transparent', // Fondo transparente
-    borderWidth: 0,         // Sin borde
-    marginBottom: 5,        // Espacio debajo del input
-    fontSize: 15,           // Tamaño del texto del input
-    color: '#c4c4c4ff',     // Color del texto
-    height: 39,             // Altura del input
-    paddingHorizontal: 8,   // Espacio lateral interno
+    borderRadius: 24,
+    backgroundColor: '#ffffff80',
+    borderWidth: 0,
+    marginBottom: 10,
+    fontSize: 16,
+    color: '#004989',
+    height: 38,
+    paddingHorizontal: 9,
+  },
+  helpText: {
+    alignSelf: 'center',
+    color: '#004989',
+    fontSize: 16,
+    marginTop: 35,
+    opacity: 1,
+    textDecorationLine: 'underline',
+    fontWeight: '600',
+  },
+  errorText: {
+    color: '#d60000',
+    alignSelf: 'center',
+    marginTop: 8,
+    marginBottom: 4,
+    fontSize: 15,
+    fontWeight: '600',
   },
 });

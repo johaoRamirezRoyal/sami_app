@@ -1,10 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { 
   View, 
   Text, 
   ImageBackground, 
-  Image, 
-  Animated, 
   TouchableOpacity, 
   KeyboardAvoidingView, 
   Platform, 
@@ -12,15 +10,23 @@ import {
 } from 'react-native';
 import { Button, Card, TextInput } from "react-native-paper";
 import { StatusBar } from 'expo-status-bar';
+import { useNavigation } from '@react-navigation/native';
 
 import { styles } from "../../styles/login/logiStyle";
 import fondo from '../../assets/fondo.jpg';
-import logo from '../../assets/logo.jpg';
 import { guardarSesion, obtenerSesion, login } from "../../components/sesion/sesion";
 import { BASE_URL } from "../../components/api/urlApi";
 
 // Componente principal de Login
 export default function Login_s ({ navigation }) {
+  const navigate = useNavigation();
+
+  useEffect(() => {
+    // Si hay sesión, redirige al dashboard o página principal
+    // Elimina el uso de localStorage aquí
+    // Puedes agregar lógica alternativa si lo necesitas
+  }, [navigate]);
+
   // Estados para los campos y la UI
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -85,22 +91,22 @@ export default function Login_s ({ navigation }) {
       <KeyboardAvoidingView
         style={{ flex: 1, justifyContent: 'center' }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 10}
       >
-        <Card style={{ backgroundColor: 'rgba(255, 255, 255, 1)', margin: 20, padding: 20, borderRadius: 100 }}>
+        <Card style={styles.card}>
           <Card.Content>
-            {/* Logo y título de la app */}
-            <Image 
-              source={logo} 
-              style={{ width: 200, height: 200, alignSelf: 'center', marginBottom: 20, borderRadius: 100 }} 
-            />
-            <Text style={[styles.title, { alignSelf: 'center', marginBottom: 2 }]}>S.A.M.I app</Text>
-            <Text style={{ color: 'gray', alignSelf: 'center', marginBottom: 20, fontSize: 16 }}>
-              sign in to continue
+
+            {/* Título y subtítulo */}
+            <Text style={[styles.title, { marginTop: 50, fontSize:27 }]}>Bienvenido a S.A.M.I app</Text>
+            <Text style={{ color: '#004989', alignSelf: 'center', marginBottom: 0, fontSize: 14, fontWeight: '600' }}>
+              Sistema de Administración y Manejo Institucional.
+            </Text>
+            <Text style={{ color: '#004989', alignSelf: 'center', marginBottom: 35, fontSize: 15 }}>
+              La plataforma del Colegio Real Royal School que integra y asegura la gestión académica, administrativa y operativa.
             </Text>
             <StatusBar style="auto" />
 
-            {/* Campo de usuario */}
+            {/* Inputs */}
             <TextInput
               label="User Name"
               value={username}
@@ -114,14 +120,13 @@ export default function Login_s ({ navigation }) {
               theme={{
                 colors: {
                   primary: '#004989',
-                  text: '#c2c2c2ff',
+                  text: '#004989',
                   placeholder: '#888'
                 },
-                roundness: 60
+                roundness: 24
               }}
             />
 
-            {/* Campo de contraseña */}
             <TextInput
               label="Password"
               value={password}
@@ -143,21 +148,21 @@ export default function Login_s ({ navigation }) {
               theme={{
                 colors: {
                   primary: '#004989',
-                  text: '#c2c2c2ff',
+                  text: '#004989',
                   placeholder: '#888'
                 },
-                roundness: 60
+                roundness: 24
               }}
             />
 
-            {/* Mensaje de error si existe */}
+            {/* Error */}
             {error ? (
-              <Text style={{ color: 'red', alignSelf: 'center', marginTop: 8, marginBottom: 4 }}>
+              <Text style={styles.errorText}>
                 {error}
               </Text>
             ) : null}
 
-            {/* Botón para ingresar */}
+            {/* Botón */}
             <View style={{ alignItems: 'center' }}>
               <TouchableOpacity
                 style={[
@@ -178,18 +183,11 @@ export default function Login_s ({ navigation }) {
               </TouchableOpacity>
             </View>
 
-            {/* Enlace de ayuda */}
+            {/* Ayuda */}
             <TouchableOpacity onPress={() => navigation.navigate('JOSE')} activeOpacity={0.7}>
-              <Animated.Text style={{
-                alignSelf: 'center',
-                color: '#afafafff',
-                fontSize: 18,
-                marginTop: 24,
-                opacity: 1,
-                textDecorationLine: 'underline'
-              }}>
+              <Text style={styles.helpText}>
                 ¿Necesitas ayuda?
-              </Animated.Text>
+              </Text>
             </TouchableOpacity>
           </Card.Content>
         </Card>

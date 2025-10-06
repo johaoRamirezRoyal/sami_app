@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
     padding: 20,
   },
   card: {
-    backgroundColor: 'rgba(185, 185, 185, 0.38)',
+    backgroundColor: 'rgba(185, 185, 185, 0.53)',
     margin: 16,
     padding: 0,
     borderRadius:80, // Menos redondeado
@@ -34,7 +34,8 @@ export const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontWeight: 'bold',
+    fontFamily: 'Sansation_Bold_Italic', // Usa el nombre de la fuente registrada
+    fontWeight: 'bold', // Hace la letra más gruesa si la fuente lo permite
     color: '#000000ff',
     marginBottom: 30,
     textAlign: 'center',

@@ -37,10 +37,11 @@ export default function HelpNav({ navigation }) {
   const aboutModules = [
     'Reservas',
     'lis. Inventario',
-    'impuntualidad',
+    'Reportes',
+    'llegadas tarde',
   ];
   const aboutText3 =
-    'permite trabajar de manera fácil, ya que su diseño se encuentra estructurado a través de módulos que permite ubicar de manera rápida las funciones asignadas para cada usuario.';
+    'ofrece una experiencia intuitiva y accesible desde dispositivos móviles Android y iOS. Su diseño modular facilita la navegación y permite a cada usuario encontrar rápidamente las funciones que necesita, optimizando el uso y la gestión de la aplicación.';
 
   // Componente para el tab "Sobre S.A.M.I app"
   function AboutRoute() {

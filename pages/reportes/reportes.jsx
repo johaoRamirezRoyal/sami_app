@@ -3,10 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, KeyboardAvoidingView, Platform } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { MaterialCommunityIcons } from '@expo/vector-icons'; // Agrega esta línea
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
 // 2. Recursos locales (imágenes y estilos)
 import { styles } from '../../styles/inicio/inicioEstilo';
-import BarraNav from '../../components/nav/barra_nav'; // Barra de navegación personalizada
+import BarraNav from '../../components/nav/barra_nav';
 import { useSesion } from '../../hookes/useSesion';
 
 // 3. Componente principal de la pantalla de reportes
@@ -34,7 +35,7 @@ export default function Reportes() {
     };
   }, [sesion]);
 
-  // --- Mostrar pantalla de carga o error si no hay sesión ---
+  // --- Mostrar pantalla de carga ---
   if (loading) {
     return (
       <SafeAreaView style={styles.safeArea}>
@@ -46,6 +47,7 @@ export default function Reportes() {
     );
   }
 
+  // --- Mostrar pantalla de error ---
   if (error) {
     return (
       <SafeAreaView style={styles.safeArea}>
@@ -60,16 +62,17 @@ export default function Reportes() {
 
   // --- Renderizado principal de la pantalla de reportes ---
   return (
+    
     <SafeAreaView style={styles.safeArea}>
+              <BarraNav />
+
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={0}
       >
-        <BarraNav />
-        {/* Contenido principal */}
         <View style={styles.container}>
-          {/* Título fijo de la pantalla de reportes */}
+          {/* Título de la pantalla */}
           <View style={{ marginTop: 24, marginBottom: 8, alignSelf: 'flex-start', width: '100%', zIndex: 2 }}>
             <Text
               style={{
@@ -93,7 +96,7 @@ export default function Reportes() {
               }}
             />
           </View>
-          {/* Aquí puedes agregar el contenido de los reportes */}
+          {/* Contenido principal */}
           <View style={{ flex: 1, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
             <MaterialCommunityIcons
               name="tools"

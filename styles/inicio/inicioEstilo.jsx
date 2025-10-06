@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f1f2f6', // Fondo general de la pantalla
+    backgroundColor: '#f1f1f1ff', // Fondo general de la pantalla
   },
   // Drawer flotante (menú lateral personalizado)
   drawerOverlay: {
@@ -18,13 +18,12 @@ export const styles = StyleSheet.create({
   },
   customDrawerContainer: {
     position: 'absolute',
-    top: 65,
-    left: 0,
+    top: 85,
+    left: 20,
     width: 240,
     height: '100%',
     backgroundColor: '#fff',
-    borderTopRightRadius: 30,
-    borderBottomRightRadius: 30,
+    borderRadius: 30, // Aplica a todas las esquinas
     elevation: 12,
     zIndex: 101,
     paddingTop: 40,
@@ -54,22 +53,23 @@ export const styles = StyleSheet.create({
   },
   // Barra de navegación superior flotante
   appbar: {
-    backgroundColor: '#fff',
-    elevation: 6,
+    backgroundColor: '#ffffffff',
+    borderRadius: 20,
+    overflow: 'hidden',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 8,
+    paddingHorizontal: 1,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 6,
     zIndex: 10,
     height: 70,
-    marginTop: 0, // Sin margen superior
-    top: 0,       // Posición absoluta arriba
+    marginTop: 0,
+    top: 40,
     position: 'absolute',
-    left: 0,
-    right: 0,
+    left: 20,
+    right: 20,
   },
   // Logo pequeño para la barra superior
   logoBar: {
@@ -79,7 +79,7 @@ export const styles = StyleSheet.create({
   // Contenedor principal de la pantalla
   container: {
     flex: 1,
-    backgroundColor: 'rgba(255,255,255,0.97)',
+    backgroundColor: 'rgba(255, 255, 255, 1)',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 30,

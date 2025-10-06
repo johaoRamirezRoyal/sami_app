@@ -286,12 +286,13 @@ export default function Inicio() {
   // --- Renderizado principal de la pantalla de reserva ---
   return (
     <SafeAreaView style={styles.safeArea}>
+      <BarraNav/>{/* Barra de navegación personalizada */}
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={0}
       >
-        <BarraNav/>{/* Barra de navegación personalizada */}
+        
         {/* Contenido principal  */}
         <View style={styles.container}>
           {/* Título fijo de la pantalla de reserva */}

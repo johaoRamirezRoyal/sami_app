@@ -9,6 +9,7 @@ import {
   Text,
   Animated,
   Easing,
+  StyleSheet,
 } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Appbar, Avatar } from "react-native-paper";
@@ -19,6 +20,7 @@ import { styles } from "../../styles/inicio/inicioEstilo";
 import { obtenerSesion, cerrarSesion } from "../../components/sesion/sesion";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { BlurView } from 'expo-blur';
 
 // Componente principal de la barra de navegación
 export default function BarraNav({ activeItemKey = "first" }) {
@@ -154,7 +156,7 @@ export default function BarraNav({ activeItemKey = "first" }) {
         </TouchableWithoutFeedback>
 
         {/* Contenedor del drawer lateral */}
-        <View style={[styles.customDrawerContainer, { width: "75%" }]}>
+        <View style={[styles.customDrawerContainer, { width: "80%" }]}>
           <View style={{ paddingHorizontal: 24, paddingTop: 24, paddingBottom: 8 }}>
             <Text style={{ fontSize: 28, color: "#004989", fontWeight: "bold" }}>Menú</Text>
             <View style={{ height: 2, backgroundColor: "#e0e0e0", marginTop: 8 }} />
@@ -211,7 +213,13 @@ export default function BarraNav({ activeItemKey = "first" }) {
       </Modal>
 
       {/* Barra superior de la app */}
-      <Appbar.Header style={styles.appbar }>
+      <View style={[styles.appbar, { overflow: 'hidden' }]}>
+        <BlurView
+          style={StyleSheet.absoluteFill}
+          blurType="light"
+          blurAmount={40} // <-- Aumenta este valor para más blur
+          reducedTransparencyFallbackColor="white"
+        />
         <View style={{ flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
           {/* Botón para abrir el drawer lateral */}
           <Appbar.Action
@@ -243,7 +251,7 @@ export default function BarraNav({ activeItemKey = "first" }) {
             />
           </TouchableOpacity>
         </View>
-      </Appbar.Header>
+      </View>
       <View style={{ paddingTop: 70 }}>
         {/* Aquí va el resto del contenido de la pantalla */}
       </View>

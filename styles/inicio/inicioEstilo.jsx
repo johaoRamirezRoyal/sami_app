@@ -20,8 +20,8 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     top: 85,
     left: 20,
-    width: 240,
-    height: '100%',
+    width: 200,
+    height: '88%',
     backgroundColor: '#fff',
     borderRadius: 30, // Aplica a todas las esquinas
     elevation: 12,
@@ -34,12 +34,12 @@ export const styles = StyleSheet.create({
   },
   drawerItem: {
     borderRadius: 30,
-    marginVertical: 2,
+    marginVertical: 10,
     backgroundColor: 'transparent', // Fondo transparente para ítems inactivos
   },
   drawerItemActive: {
     borderRadius: 30,
-    marginVertical: 2,
+    marginVertical: 10,
     backgroundColor: 'rgba(0,73,137,0.5)', // Fondo azul con opacidad para ítem activo
   },
   drawerItemLabel: {
@@ -143,4 +143,45 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     letterSpacing: 1, // Espaciado entre letras
   },
+
+  // Contenedor del reloj
+  relojContainer: {
+    width: '90%',
+    alignItems: 'center',
+    marginTop: 25,
+    marginBottom: 15,
+  },
+  relojLabel: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 8,
+  },
+  reloj: {
+    textAlign: 'center',
+    color: '#000',
+  },
+  peekCalendar: {
+    width: '90%',
+    marginTop: 18,
+    borderRadius: 20,
+    overflow: 'hidden',
+    
+  },
+
+  backgroundContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: -1, // detrás del contenido
+  },
+  backgroundImage: {
+    width: 280, // ajusta el tamaño según necesites
+    height: 280,
+    opacity: 0.15, // suaviza el fondoxz
+  },
+
 });

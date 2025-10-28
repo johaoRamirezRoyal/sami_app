@@ -3,7 +3,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Image } from 'react-native';
 
-
 import login_s from './pages/login/login_Sami';
 import Inicio from './pages/inicio/inicio';
 import llegadas_tarde from './pages/llegadas_tardes/asistencia';
@@ -13,14 +12,13 @@ import Reserve from './pages/reserve/reserve';
 import inventario from './pages/lis.Inventario/lis.Inventario';
 import SplashScreen from './pages/login/cargalogin';
 import PerfilScreen from './pages/perfil/perfil'; // Importa tu pantalla de perfil aquí
-import BarraNav from './components/nav/barra_nav';
 import Reportes from './pages/reportes/reportes'; // <--- Agrega esta línea
 
 const Stack = createNativeStackNavigator();
 
 
 // Función reutilizable para las opciones del header con logo y back
-function   getLogoHeaderOptions(extraOptions = {}) {
+function getLogoHeaderOptions(extraOptions = {}) {
   return ({ navigation }) => ({
     headerTitle: () => (
       <Image
@@ -32,11 +30,13 @@ function   getLogoHeaderOptions(extraOptions = {}) {
     headerLeft: () => (
       <MaterialCommunityIcons
         name="account-arrow-left"
-        size={35}
+        size={32}
+        color="#333"
         style={{ marginLeft: 15 }}
         onPress={() => navigation.goBack()}
       />
     ),
+    // Permite sobreescribir opciones adicionales
     ...extraOptions,
   });
 }

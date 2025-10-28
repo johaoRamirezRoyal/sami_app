@@ -1,4 +1,4 @@
-import { Image, View, Text, Platform, ScrollView } from "react-native";
+import { Image, View, Text, Platform, ScrollView, ImageBackground } from "react-native";
 import YoutubePlayer from 'react-native-youtube-iframe';
 import { Appbar } from "react-native-paper";
 import { TabBar, TabView } from "react-native-tab-view";
@@ -104,28 +104,45 @@ export default function HelpNav({ navigation }) {
 
   // Render principal del componente con TabView
   return (
-    <View style={styles.root}>
-      {/* Contenido central con tabs */}
-      <View style={styles.centerContent}>
-        <TabView
-          navigationState={{ index, routes }}
-          renderScene={renderScene}
-          onIndexChange={setIndex}
-          initialLayout={{ width: 360 }}
-          renderTabBar={(props) => (
-            <TabBar
-              {...props}
-              indicatorStyle={{ backgroundColor: "#004989" }}
-              style={{ backgroundColor: "#fff" }}
-              labelStyle={{ color: "#004989", fontWeight: "bold" }}
-              activeColor="#004989"
-              inactiveColor="#888"
-              scrollEnabled
-            />
-          )}
-        />
+    <ImageBackground
+      source={require("../../assets/fondo.jpg")}
+      style={{ flex: 1, resizeMode: "cover" }}
+    >
+      <View style={[styles.root, { backgroundColor: "rgba(255, 255, 255, 0.82)" }]}>
+        {/* Contenido central con tabs */}
+        <View style={styles.centerContent}>
+          <TabView
+            navigationState={{ index, routes }}
+            renderScene={renderScene}
+            onIndexChange={setIndex}
+            initialLayout={{ width: 360 }}
+            renderTabBar={(props) => (
+              <TabBar
+                {...props}
+                indicatorStyle={{ backgroundColor: "#004989", height: 4, borderRadius: 2 }}
+                style={{
+                  backgroundColor: "#fff",
+                  borderBottomWidth: 1,
+                  borderBottomColor: "#e0e0e0",
+                  elevation: 0,
+                }}
+                labelStyle={{
+                  color: props.navigationState.index === props.position ? "#004989" : "#888",
+                  fontWeight: "bold",
+                  fontSize: 15,
+                  textTransform: "none",
+                }}
+                activeColor="#004989"
+                inactiveColor="#888"
+                scrollEnabled
+                tabStyle={{ width: "auto", paddingHorizontal: 16 }}
+                accessibilityRole="tablist"
+              />
+            )}
+          />
+        </View>
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 

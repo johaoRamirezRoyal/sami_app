@@ -35,10 +35,11 @@ export default function BarraNav({ activeItemKey = "first" }) {
   // Elementos del menú lateral
   const drawerItems = [
     { label: "Inicio", key: "first", icon: "home", screen: "inicio" },
-    { label: "Reservas", key: "second", icon: "calendar", screen: "reserve" },
-    { label: "lis. Inventario", key: "third", icon: "archive", screen: "inventario" },
-    { label: "Reportes", key: "fifth", icon: "file-chart", screen: "reportes" },
-    { label: "llegadas tarde", key: "quarter", icon: "clock", screen: "llegadas_tarde" },
+    { label: "Reservas", key: "second", icon: "calendar-month", screen: "reserve" },
+    { label: "Inventario", key: "third", icon: "archive-outline", screen: "inventario" },
+    { label: "Reportes", key: "fifth", icon: "file-chart-outline", screen: "reportes" },
+    { label: "Llegadas tarde", key: "quarter", icon: "clock-alert-outline", screen: "llegadas_tarde" },
+    { label: "Programación Mensajero", key: "sixth", icon: "account-clock-outline", screen: "programacion" },
   ];
 
   // Referencia para animaciones de los items del drawer

@@ -496,7 +496,7 @@ export default function ProgramacionMensajero() {
           {/* Sección de actividades */}
           <View style={stylespm.actividadesSection}>
             <Text style={stylespm.actividadesTitle}>
-              tabla
+              Actividades
             </Text>
             <View style={stylespm.actividadesDivider} />
           </View>
@@ -506,21 +506,25 @@ export default function ProgramacionMensajero() {
             <View>
               <DataTable>
                 <DataTable.Header>
-                  <DataTable.Title style={{ minWidth: 250 }}><Text>Nombre</Text></DataTable.Title>
-                  <DataTable.Title style={{ minWidth: 120 }}><Text>Actividad</Text></DataTable.Title>
+                  <DataTable.Title style={{ minWidth: 280 }}><Text>Nombre</Text></DataTable.Title>
+                  <DataTable.Title style={{ minWidth: 150 }}><Text>Actividad</Text></DataTable.Title>
                   <DataTable.Title style={{ minWidth: 120 }}><Text>Fecha Inicio</Text></DataTable.Title>
                   <DataTable.Title style={{ minWidth: 120 }}><Text>Fecha Final</Text></DataTable.Title>
                   <DataTable.Title style={{ minWidth: 200 }}><Text>Observación</Text></DataTable.Title>
-                  <DataTable.Title style={{ minWidth: 80 }}><Text>Estado</Text></DataTable.Title>
-                  <DataTable.Title style={{ minWidth: 100 }}></DataTable.Title>
+                  <DataTable.Title style={{ minWidth: 100 }}><Text>Estado</Text></DataTable.Title>
+                  <DataTable.Title style={{ minWidth: 80 }}></DataTable.Title>
+                  <DataTable.Title style={{ minWidth: 60 }}></DataTable.Title> {/* Nueva columna */}
                 </DataTable.Header>
               </DataTable>
+              {/* Agrega el console.log aquí */}
               <ScrollView style={stylespm.tableScroll} showsVerticalScrollIndicator={true}>
                 <DataTable>
                   {(Array.isArray(actividadesRaw?.data) ? actividadesRaw.data : []).map((actividad, idx) => (
                     <DataTable.Row key={idx}>
-                      <DataTable.Cell style={{ minWidth: 250 }}><Text>{getNombreUsuario(actividad.id_user)}</Text></DataTable.Cell>
-                      <DataTable.Cell style={{ minWidth: 120 }}><Text>{actividad.actividad}</Text></DataTable.Cell>
+                      <DataTable.Cell style={{ minWidth: 280 }}>
+                        <Text>{actividad.nombre_usuario}</Text>
+                      </DataTable.Cell>
+                      <DataTable.Cell style={{ minWidth: 150 }}><Text>{actividad.actividad}</Text></DataTable.Cell>
                       <DataTable.Cell style={{ minWidth: 120 }}>
                         <Text>{actividad.fecha_inicio ? actividad.fecha_inicio.slice(0, 10) : ''}</Text>
                       </DataTable.Cell>
@@ -528,7 +532,7 @@ export default function ProgramacionMensajero() {
                         <Text>{actividad.fecha_final ? actividad.fecha_final.slice(0, 10) : ''}</Text>
                       </DataTable.Cell>
                       <DataTable.Cell style={{ minWidth: 200 }}><Text>{actividad.observacion}</Text></DataTable.Cell>
-                      <DataTable.Cell style={{ minWidth: 80 }}>
+                      <DataTable.Cell style={{ minWidth: 100 }}>
                         <Text>
                           {(actividad.estado === 1 || actividad.estado === "1") && (
                             <Text style={{ color: '#007bff', fontWeight: 'bold' }}>Pendiente</Text>
@@ -542,7 +546,7 @@ export default function ProgramacionMensajero() {
                           {[0, 1, 2, "0", "1", "2"].indexOf(actividad.estado) === -1 && actividad.estado}
                         </Text>
                       </DataTable.Cell>
-                      <DataTable.Cell style={{ minWidth: 100 }}>
+                      <DataTable.Cell style={{ minWidth: 80 }}>
                         <Button
                           mode="contained"
                           compact
@@ -555,6 +559,8 @@ export default function ProgramacionMensajero() {
                         >
                           <Text>Ver</Text>
                         </Button>
+                      </DataTable.Cell>
+                      <DataTable.Cell style={{ minWidth: 60 }}>
                         {/* Botón "Ver evidencia" mejorado */}
                         {actividad.evidencia && actividad.evidencia !== '' && (
                           <Button
@@ -584,10 +590,10 @@ export default function ProgramacionMensajero() {
                                 Alert.alert('Error', 'No se pudo mostrar la evidencia.');
                               }
                             }}
-                            style={{ backgroundColor: '#28a745', marginTop: 3 }}
+                            style={{ backgroundColor: '#28a745', marginTop: 3, minWidth: 50  }} // <-- ancho aumentado aquí
                             labelStyle={{ color: '#ffffffff', fontWeight: 'bold' }}
                           >
-                            Ver
+                            <Text>Ver</Text>
                           </Button>
                         )}
                       </DataTable.Cell>

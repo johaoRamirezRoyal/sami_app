@@ -184,7 +184,7 @@ export const stylespm = StyleSheet.create({
 
   // Tabla
   tableScroll: {
-    maxHeight: 300,
+    maxHeight: 500,
   },
   tableButton: {
     backgroundColor: '#004989',

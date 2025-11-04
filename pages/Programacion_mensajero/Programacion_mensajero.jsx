@@ -309,6 +309,20 @@ export default function ProgramacionMensajero() {
     }
   };
 
+  // Utilidad para obtener el estado y color
+  const getEstadoActividad = (estado) => {
+    switch (String(estado)) {
+      case "1":
+        return { label: "Pendiente", color: "#007bff" };
+      case "0":
+        return { label: "Cancelado", color: "#dc3545" };
+      case "2":
+        return { label: "Completado", color: "#28a745" };
+      default:
+        return { label: estado, color: "#333" };
+    }
+  };
+
   // ==========================
   // Renderizado principal
   // ==========================
@@ -512,11 +526,10 @@ export default function ProgramacionMensajero() {
                   <DataTable.Title style={{ minWidth: 120 }}><Text>Fecha Final</Text></DataTable.Title>
                   <DataTable.Title style={{ minWidth: 200 }}><Text>Observación</Text></DataTable.Title>
                   <DataTable.Title style={{ minWidth: 100 }}><Text>Estado</Text></DataTable.Title>
-                  <DataTable.Title style={{ minWidth: 80 }}></DataTable.Title>
-                  <DataTable.Title style={{ minWidth: 60 }}></DataTable.Title> {/* Nueva columna */}
+                  <DataTable.Title style={{ minWidth: 80 }}><Text></Text></DataTable.Title>
+                  <DataTable.Title style={{ minWidth: 60 }}><Text></Text></DataTable.Title>
                 </DataTable.Header>
               </DataTable>
-              {/* Agrega el console.log aquí */}
               <ScrollView style={stylespm.tableScroll} showsVerticalScrollIndicator={true}>
                 <DataTable>
                   {(Array.isArray(actividadesRaw?.data) ? actividadesRaw.data : []).map((actividad, idx) => (
@@ -525,26 +538,16 @@ export default function ProgramacionMensajero() {
                         <Text>{actividad.nombre_usuario}</Text>
                       </DataTable.Cell>
                       <DataTable.Cell style={{ minWidth: 150 }}><Text>{actividad.actividad}</Text></DataTable.Cell>
-                      <DataTable.Cell style={{ minWidth: 120 }}>
-                        <Text>{actividad.fecha_inicio ? actividad.fecha_inicio.slice(0, 10) : ''}</Text>
-                      </DataTable.Cell>
-                      <DataTable.Cell style={{ minWidth: 120 }}>
-                        <Text>{actividad.fecha_final ? actividad.fecha_final.slice(0, 10) : ''}</Text>
-                      </DataTable.Cell>
+                      <DataTable.Cell style={{ minWidth: 120 }}><Text>{actividad.fecha_inicio ? actividad.fecha_inicio.slice(0, 10) : ''}</Text></DataTable.Cell>
+                      <DataTable.Cell style={{ minWidth: 120 }}><Text>{actividad.fecha_final ? actividad.fecha_final.slice(0, 10) : ''}</Text></DataTable.Cell>
                       <DataTable.Cell style={{ minWidth: 200 }}><Text>{actividad.observacion}</Text></DataTable.Cell>
                       <DataTable.Cell style={{ minWidth: 100 }}>
-                        <Text>
-                          {(actividad.estado === 1 || actividad.estado === "1") && (
-                            <Text style={{ color: '#007bff', fontWeight: 'bold' }}>Pendiente</Text>
-                          )}
-                          {(actividad.estado === 0 || actividad.estado === "0") && (
-                            <Text style={{ color: '#dc3545', fontWeight: 'bold' }}>Cancelado</Text>
-                          )}
-                          {(actividad.estado === 2 || actividad.estado === "2") && (
-                            <Text style={{ color: '#28a745', fontWeight: 'bold' }}>Completado</Text>
-                          )}
-                          {[0, 1, 2, "0", "1", "2"].indexOf(actividad.estado) === -1 && actividad.estado}
-                        </Text>
+                        {(() => {
+                          const { label, color } = getEstadoActividad(actividad.estado);
+                          return (
+                            <Text style={{ color, fontWeight: 'bold' }}>{label}</Text>
+                          );
+                        })()}
                       </DataTable.Cell>
                       <DataTable.Cell style={{ minWidth: 80 }}>
                         <Button
@@ -557,7 +560,7 @@ export default function ProgramacionMensajero() {
                           style={stylespm.tableButton}
                           labelStyle={stylespm.tableButtonLabel}
                         >
-                          <Text>Ver</Text>
+                          Ver
                         </Button>
                       </DataTable.Cell>
                       <DataTable.Cell style={{ minWidth: 60 }}>
@@ -593,7 +596,7 @@ export default function ProgramacionMensajero() {
                             style={{ backgroundColor: '#28a745', marginTop: 3, minWidth: 50  }} // <-- ancho aumentado aquí
                             labelStyle={{ color: '#ffffffff', fontWeight: 'bold' }}
                           >
-                            <Text>Ver</Text>
+                            Ver
                           </Button>
                         )}
                       </DataTable.Cell>
@@ -671,7 +674,6 @@ export default function ProgramacionMensajero() {
                   />
                 )}
               </View>
-              {/* Validación de campos */}
               {(estadoTarea === '' || fechaAprobacion === '') && (
                 <Text style={stylespm.aprobarError}>
                   Por favor selecciona estado y fecha.
@@ -717,7 +719,7 @@ export default function ProgramacionMensajero() {
                     }
                     await handleAprobarTarea();
                     await handleActualizarActividad();
-                    setReloadActividades(prev => !prev); // <-- Fuerza recarga de la tabla
+                    setReloadActividades(prev => !prev);
                   }}
                   disabled={estadoTarea === '' || fechaAprobacion === ''}
                   style={[stylespm.buttonPrimary, stylespm.aprobarGuardarButton]}
@@ -737,7 +739,7 @@ export default function ProgramacionMensajero() {
             </Modal>
           </Portal>
 
-          {/* 🔍 Modal para ver evidencia */}
+          {/* Modal para ver evidencia */}
           <Portal>
             <Modal
               visible={verEvidenciaVisible}

@@ -122,6 +122,29 @@ export default function ProgramacionMensajero() {
     return () => clearTimeout(delayDebounce);
   }, [searchText]);
 
+  // Nuevo estado para guardar todos los usuarios
+  const [usuarios, setUsuarios] = useState([]);
+
+  // Al cargar el componente, trae todos los usuarios (puedes ajustar la URL según tu API)
+  useEffect(() => {
+    const fetchAllUsuarios = async () => {
+      try {
+        const res = await fetch(`${BASE_URL}/usuarios`);
+        const data = await res.json();
+        setUsuarios(data);
+      } catch {
+        setUsuarios([]);
+      }
+    };
+    fetchAllUsuarios();
+  }, []);
+
+  // Función para buscar el nombre por id_user
+  const getNombreUsuario = (id_user) => {
+    const usuario = usuarios.find(u => u.id_user === id_user);
+    return usuario ? usuario.nombre : id_user;
+  };
+
   // ==========================
   // Funciones principales
   // ==========================
@@ -321,7 +344,7 @@ export default function ProgramacionMensajero() {
         <BarraNav />
         <View style={styles.container}>
           {/* Título principal */}
-          <Text style={styles.title}>Toma de asistencias</Text>
+          <Text style={styles.title}>programacion de mensajero</Text>
 
           {/* Botón para agregar actividad */}
           <View style={{ alignItems: 'center', marginBottom: 5 }}>
@@ -473,7 +496,7 @@ export default function ProgramacionMensajero() {
           {/* Sección de actividades */}
           <View style={stylespm.actividadesSection}>
             <Text style={stylespm.actividadesTitle}>
-              Llegadas tardes
+              tabla
             </Text>
             <View style={stylespm.actividadesDivider} />
           </View>
@@ -483,7 +506,7 @@ export default function ProgramacionMensajero() {
             <View>
               <DataTable>
                 <DataTable.Header>
-                  <DataTable.Title style={{ minWidth: 80 }}><Text>ID Usuario</Text></DataTable.Title>
+                  <DataTable.Title style={{ minWidth: 250 }}><Text>Nombre</Text></DataTable.Title>
                   <DataTable.Title style={{ minWidth: 120 }}><Text>Actividad</Text></DataTable.Title>
                   <DataTable.Title style={{ minWidth: 120 }}><Text>Fecha Inicio</Text></DataTable.Title>
                   <DataTable.Title style={{ minWidth: 120 }}><Text>Fecha Final</Text></DataTable.Title>
@@ -496,7 +519,7 @@ export default function ProgramacionMensajero() {
                 <DataTable>
                   {(Array.isArray(actividadesRaw?.data) ? actividadesRaw.data : []).map((actividad, idx) => (
                     <DataTable.Row key={idx}>
-                      <DataTable.Cell style={{ minWidth: 80 }}><Text>{actividad.id_user}</Text></DataTable.Cell>
+                      <DataTable.Cell style={{ minWidth: 250 }}><Text>{getNombreUsuario(actividad.id_user)}</Text></DataTable.Cell>
                       <DataTable.Cell style={{ minWidth: 120 }}><Text>{actividad.actividad}</Text></DataTable.Cell>
                       <DataTable.Cell style={{ minWidth: 120 }}>
                         <Text>{actividad.fecha_inicio ? actividad.fecha_inicio.slice(0, 10) : ''}</Text>
@@ -561,7 +584,7 @@ export default function ProgramacionMensajero() {
                                 Alert.alert('Error', 'No se pudo mostrar la evidencia.');
                               }
                             }}
-                            style={{ backgroundColor: '#4cf370ff', marginTop: 3 }}
+                            style={{ backgroundColor: '#28a745', marginTop: 3 }}
                             labelStyle={{ color: '#ffffffff', fontWeight: 'bold' }}
                           >
                             Ver
@@ -589,7 +612,6 @@ export default function ProgramacionMensajero() {
               {/* Datos de la actividad seleccionada */}
               {selectedActividad && (
                 <View style={stylespm.aprobarActividadInfo}>
-                  <Text><Text style={{ fontWeight: 'bold' }}>ID:</Text> {selectedActividad.id}</Text>
                   <Text><Text style={{ fontWeight: 'bold' }}>Actividad:</Text> {selectedActividad.actividad}</Text>
                   <Text><Text style={{ fontWeight: 'bold' }}>Fecha inicio:</Text> {selectedActividad.fecha_inicio?.slice(0,10)}</Text>
                 </View>

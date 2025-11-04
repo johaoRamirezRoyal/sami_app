@@ -325,16 +325,21 @@ export default function BarraNav({ activeItemKey = "first" }) {
             <View style={{ width: "100%", height: 1, backgroundColor: "#e0e0e0", marginBottom: 18 }} />
 
             {/* Botón para ver información personal */}
-            <View style={{ alignItems: "center" }}>
+            <View style={{ alignItems: "center", marginBottom: 16 }}>
               <TouchableOpacity
                 style={{
-                  width: 180,
-                  height: 40,
-                  borderRadius: 30,
-                  backgroundColor: "#ffffff",
+                  width: "80%",
+                  maxWidth: 220,
+                  height: 44,
+                  borderRadius: 22,
+                  backgroundColor: "#fff",
                   justifyContent: "center",
                   alignItems: "center",
-                  marginBottom: 12,
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.08,
+                  shadowRadius: 4,
+                  elevation: 2,
                 }}
                 onPress={() => {
                   setBottomDrawerVisible(false);

@@ -294,4 +294,21 @@ export const stylespm = StyleSheet.create({
     borderRadius: 20,
     borderColor: '#004989',
   },
+
+  // Actividades búsqueda
+  actividadesSearchInput: {
+    backgroundColor: '#f0f0f0',
+    borderRadius: 8,
+    paddingHorizontal: 40, // espacio para el icono
+    paddingVertical: 8,
+    fontSize: 16,
+    borderWidth: 1,
+    borderColor: '#ccc',
+  },
+  actividadesSearchIcon: {
+    position: 'absolute',
+    left: 12,
+    top: '50%',
+    transform: [{ translateY: -12 }],
+  },
 });

@@ -66,6 +66,9 @@ export default function ProgramacionMensajero() {
   const [verEvidenciaVisible, setVerEvidenciaVisible] = useState(false);
   const [imagenEvidencia, setImagenEvidencia] = useState(null);
 
+  // Agrega este estado para la búsqueda en la tabla de actividades
+  const [searchActividadText, setSearchActividadText] = useState('');
+
   // --------------------------
   // Hooks personalizados
   // --------------------------
@@ -515,6 +518,25 @@ export default function ProgramacionMensajero() {
             <View style={stylespm.actividadesDivider} />
           </View>
 
+          {/* Input de búsqueda para la tabla de actividades */}
+          <View style={{ marginBottom: 10, marginHorizontal: 10 }}>
+            <View style={{ position: 'relative', justifyContent: 'center' }}>
+              <TextInput
+                placeholder="Buscar en actividades..."
+                value={searchActividadText}
+                onChangeText={setSearchActividadText}
+                style={stylespm.actividadesSearchInput}
+              />
+              <MaterialIcons
+                name="search"
+                size={24}
+                color="#004989"
+                style={stylespm.actividadesSearchIcon}
+                pointerEvents="none"
+              />
+            </View>
+          </View>
+
           {/* Tabla de actividades */}
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <View>
@@ -532,7 +554,31 @@ export default function ProgramacionMensajero() {
               </DataTable>
               <ScrollView style={stylespm.tableScroll} showsVerticalScrollIndicator={true}>
                 <DataTable>
-                  {(Array.isArray(actividadesRaw?.data) ? actividadesRaw.data : []).map((actividad, idx) => (
+                  {(Array.isArray(actividadesRaw?.data) ?
+                    actividadesRaw.data
+                      .filter(actividad => {
+                        if (!searchActividadText.trim()) {
+                          // Sin búsqueda: solo actividades de la fecha actual
+                          const hoy = new Date();
+                          const yyyy = hoy.getFullYear();
+                          const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+                          const dd = String(hoy.getDate()).padStart(2, '0');
+                          const fechaHoy = `${yyyy}-${mm}-${dd}`;
+                          return actividad.fecha_inicio && actividad.fecha_inicio.slice(0, 10) === fechaHoy;
+                        } else {
+                          // Con búsqueda: mostrar todas las fechas que coincidan con el texto
+                          const texto = searchActividadText.toLowerCase();
+                          return (
+                            (actividad.nombre_usuario || '').toLowerCase().includes(texto) ||
+                            (actividad.actividad || '').toLowerCase().includes(texto) ||
+                            (actividad.observacion || '').toLowerCase().includes(texto) ||
+                            (actividad.fecha_inicio || '').toLowerCase().includes(texto) ||
+                            (actividad.fecha_final || '').toLowerCase().includes(texto)
+                          );
+                        }
+                      })
+                    : []
+                  ).map((actividad, idx) => (
                     <DataTable.Row key={idx}>
                       <DataTable.Cell style={{ minWidth: 280 }}>
                         <Text>{actividad.nombre_usuario}</Text>
@@ -572,17 +618,12 @@ export default function ProgramacionMensajero() {
                             onPress={() => {
                               try {
                                 let evidenciaData = actividad.evidencia;
-                                // Si es un objeto tipo Buffer
                                 if (typeof evidenciaData === 'object' && evidenciaData.data) {
                                   const base64String = Buffer.from(evidenciaData.data).toString('base64');
                                   evidenciaData = `data:image/jpeg;base64,${base64String}`;
-                                }
-                                // Si es un string base64 sin encabezado
-                                else if (typeof evidenciaData === 'string' && !evidenciaData.startsWith('data:image')) {
+                                } else if (typeof evidenciaData === 'string' && !evidenciaData.startsWith('data:image')) {
                                   evidenciaData = `data:image/jpeg;base64,${evidenciaData}`;
-                                }
-                                // Si no hay evidencia válida
-                                else if (!evidenciaData) {
+                                } else if (!evidenciaData) {
                                   Alert.alert('Sin evidencia', 'Esta actividad no tiene evidencia asociada.');
                                   return;
                                 }
@@ -593,7 +634,7 @@ export default function ProgramacionMensajero() {
                                 Alert.alert('Error', 'No se pudo mostrar la evidencia.');
                               }
                             }}
-                            style={{ backgroundColor: '#28a745', marginTop: 3, minWidth: 50  }} // <-- ancho aumentado aquí
+                            style={{ backgroundColor: '#28a745', marginTop: 3, minWidth: 50  }}
                             labelStyle={{ color: '#ffffffff', fontWeight: 'bold' }}
                           >
                             Ver
